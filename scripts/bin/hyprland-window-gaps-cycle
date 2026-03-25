@@ -6,6 +6,22 @@ borders=$(hyprctl getoption general:border_size -j | jq -r '.int')
 ms=500
 
 if [ $gaps == "0" ]; then
+#   hyprctl keyword general:gaps_out 200
+#   hyprctl keyword general:gaps_in 6
+#   notify-send "󰍹    6px inner gaps" "      200px outer gaps" -t "$ms"
+# elif [ $gaps == "200" ]; then
+  hyprctl keyword general:gaps_out "10, 100, 10, 100"
+  hyprctl keyword general:gaps_in 6
+  notify-send "󰍹    6px inner gaps" "      150px outer gaps" -t "$ms"
+elif [ $gaps == "150" ]; then
+  hyprctl keyword general:gaps_out 100
+  hyprctl keyword general:gaps_in 6
+  notify-send "󰍹    6px inner gaps" "      100px outer gaps" -t "$ms"
+elif [ $gaps == "100" ]; then
+  hyprctl keyword general:gaps_out 50
+  hyprctl keyword general:gaps_in 6
+  notify-send "󰍹    6px inner gaps" "      50px outer gaps" -t "$ms"
+elif [ $gaps == "0" ]; then
   hyprctl keyword general:gaps_out 30
   hyprctl keyword general:gaps_in 15
   notify-send "󰍹    15px inner gaps" "      30px outer gaps" -t "$ms"
