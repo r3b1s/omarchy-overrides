@@ -4,6 +4,7 @@
 bindkey -v # vi mode
 
 # sourcing
+export RTK_TELEMETRY_DISABLED=1
 source $HOME/.local/share/omarchy-overrides/shell/envs # env vars
 source $DOTS/shell/aliases # aliases
 source $DOTS/shell/fns # functions
