@@ -5,8 +5,7 @@
 # which systemd --user picks up for all graphical/service sessions.
 set -euo pipefail
 
-REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-CONF_SRC="${REPO_DIR}/environment.d/telemetry.conf"
+CONF_SRC="${DOTS}/environment.d/telemetry.conf"
 CONF_DEST="${HOME}/.config/environment.d/telemetry.conf"
 
 die()  { echo "error: $*" >&2; exit 1; }
