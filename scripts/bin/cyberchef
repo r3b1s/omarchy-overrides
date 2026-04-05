@@ -1,0 +1,184 @@
+#!/bin/bash
+
+set -euo pipefail
+
+USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
+REPO_INSTALLS="$USER_HOME/Applications/repos"
+REPO_DIR="$REPO_INSTALLS/CyberChef"
+CONTAINER_NAME="cyberchef"
+IMAGE_NAME="cyberchef"
+PORT=42000
+URL="http://localhost:${PORT}"
+
+log() { printf '%s\n' "$*"; }
+die() { printf 'Error: %s\n' "$*" >&2; exit 1; }
+
+require_cmd() {
+  command -v "$1" >/dev/null 2>&1 || die "Required command not found: $1"
+}
+
+container_running() {
+  docker ps --filter "name=^/${CONTAINER_NAME}$" --filter "status=running" --format '{{.Names}}' 2>/dev/null | grep -q "^${CONTAINER_NAME}$"
+}
+
+container_exists() {
+  docker ps -a --filter "name=^/${CONTAINER_NAME}$" --format '{{.Names}}' 2>/dev/null | grep -q "^${CONTAINER_NAME}$"
+}
+
+image_exists() {
+  docker image inspect "${IMAGE_NAME}" >/dev/null 2>&1
+}
+
+cmd_install() {
+  require_cmd docker
+  require_cmd git
+
+  if image_exists; then
+    log "CyberChef image already built."
+  else
+    mkdir -p "$REPO_INSTALLS"
+
+    if [[ ! -d "$REPO_DIR" ]]; then
+      log "Cloning CyberChef repository..."
+      git clone https://github.com/gchq/CyberChef.git "$REPO_DIR"
+    else
+      log "Repository already exists at $REPO_DIR."
+    fi
+
+    log "Building Docker image (this may take a while)..."
+    docker build --tag "${IMAGE_NAME}" --ulimit nofile=10000 "$REPO_DIR"
+    log "Docker image built successfully."
+  fi
+
+  log "Starting CyberChef container..."
+  cmd_up
+
+  log "Waiting for CyberChef to become available at ${URL}..."
+  local attempts=0
+  until curl --silent --fail --max-time 2 "${URL}" >/dev/null 2>&1; do
+    attempts=$(( attempts + 1 ))
+    if (( attempts >= 30 )); then
+      die "CyberChef did not become available after 60 seconds."
+    fi
+    sleep 2
+  done
+  log "CyberChef is available."
+
+  log ""
+  log "Installing as a webapp for omarchy..."
+  omarchy-webapp-install \
+    "CyberChef" \
+    "${URL}" \
+    "${URL}/images/cyberchef-128x128.png" \
+    "$USER_HOME/.local/share/omarchy-overrides/scripts/bin/cyberchef launch"
+}
+
+cmd_uninstall() {
+  require_cmd docker
+  require_cmd gum
+
+  if container_running; then
+    log "Stopping container..."
+    docker stop "${CONTAINER_NAME}"
+  fi
+
+  if container_exists; then
+    log "Removing container..."
+    docker rm "${CONTAINER_NAME}"
+  fi
+
+  if image_exists; then
+    log "Removing Docker image..."
+    docker rmi "${IMAGE_NAME}"
+  fi
+
+  if [[ -d "$REPO_DIR" ]]; then
+    if gum confirm "Delete the source repository at ${REPO_DIR}?"; then
+      rm -rf "$REPO_DIR"
+      log "Source repository deleted."
+    else
+      log "Source repository kept at ${REPO_DIR}."
+    fi
+  fi
+
+  log "CyberChef uninstalled."
+}
+
+cmd_up() {
+  require_cmd docker
+  image_exists || die "CyberChef image not found. Run 'cyberchef install' first."
+
+  if container_running; then
+    log "CyberChef container is already running."
+    return 0
+  fi
+
+  if container_exists; then
+    docker start "${CONTAINER_NAME}"
+  else
+    docker run -d --name "${CONTAINER_NAME}" -p "${PORT}:80" "${IMAGE_NAME}"
+  fi
+
+  log "CyberChef is up at ${URL}"
+}
+
+cmd_down() {
+  require_cmd docker
+
+  if container_running; then
+    docker stop "${CONTAINER_NAME}"
+    log "CyberChef container stopped."
+  else
+    log "CyberChef container is not running."
+  fi
+}
+
+cmd_launch() {
+  require_cmd docker
+
+  if ! image_exists; then
+    require_cmd gum
+    gum confirm "CyberChef is not installed. Install it now?" || exit 0
+    cmd_install
+    return
+  fi
+
+  if ! container_running; then
+    cmd_up
+  fi
+
+  nohup omarchy-launch-webapp "${URL}" >/dev/null 2>&1 &
+}
+
+usage() {
+  cat <<EOF
+Usage: cyberchef <command>
+
+Commands:
+  install     Clone and build CyberChef, then register as an omarchy webapp
+  uninstall   Stop container, remove image, optionally delete source repo
+  up          Start the CyberChef container
+  down        Stop the CyberChef container
+  launch      Start container if needed and open the webapp (default)
+  -h|--help   Show this help text
+EOF
+}
+
+main() {
+  local command="${1:-launch}"
+
+  case "${command}" in
+    install)   cmd_install ;;
+    uninstall) cmd_uninstall ;;
+    up)        cmd_up ;;
+    down)      cmd_down ;;
+    launch)    cmd_launch ;;
+    -h|--help) usage ;;
+    *)
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"
