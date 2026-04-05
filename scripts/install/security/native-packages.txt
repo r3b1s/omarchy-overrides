@@ -1,3 +1,22 @@
+# misc
+traceroute
+whois
+bind # AKA dnsutils - provides dig
 gobuster
+hydra
+medusa
+
+# java
 zaproxy
+
+# ruby
 metasploit
+
+# python
+python-pipx
+scrapy
+python-pyftpdlib # for scrapy
+
+# perl
+nikto
+perl-xml-writer # for nikto
