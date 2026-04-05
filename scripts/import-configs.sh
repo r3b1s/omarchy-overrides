@@ -36,11 +36,11 @@ cp -f $HYPR_DOTS/looknfeel.conf $HYPR_CFG/looknfeel.conf
 
 # scripts
 mkdir -p $HYPR_SCRIPTS
-cp -f $DOTS/scripts/hyprscripts/hyprgamemode.sh $HYPR_SCRIPTS/hyprgamemode.sh
-cp -f $DOTS/scripts/hyprscripts/delta-resize.sh $HYPR_SCRIPTS/delta-resize.sh
-cp -f $DOTS/scripts/hyprscripts/orientation-cycle.sh $HYPR_SCRIPTS/orientation-cycle.sh
-cp -f $DOTS/scripts/hyprscripts/master-roll.sh $HYPR_SCRIPTS/master-roll.sh
-cp -f $DOTS/scripts/hyprscripts/center-mfact-daemon.sh $HYPR_SCRIPTS/center-mfact-daemon.sh
+cp -f $DOTS/hypr/scripts/hyprgamemode.sh $HYPR_SCRIPTS/hyprgamemode.sh
+cp -f $DOTS/hypr/scripts/delta-resize.sh $HYPR_SCRIPTS/delta-resize.sh
+cp -f $DOTS/hypr/scripts/orientation-cycle.sh $HYPR_SCRIPTS/orientation-cycle.sh
+cp -f $DOTS/hypr/scripts/master-roll.sh $HYPR_SCRIPTS/master-roll.sh
+cp -f $DOTS/hypr/scripts/center-mfact-daemon.sh $HYPR_SCRIPTS/center-mfact-daemon.sh
 chmod 755 $HYPR_SCRIPTS/*.sh
 
 ###                  ###

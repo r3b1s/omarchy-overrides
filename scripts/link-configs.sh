@@ -10,7 +10,7 @@ USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 # Dotfiles
 DOTS="$USER_HOME/.local/share/omarchy-overrides"
 HYPR_DOTS="$DOTS/hypr"
-HYPR_SCRIPTS="$DOTS/scripts/hyprscripts"
+HYPR_SCRIPTS="$DOTS/hypr/scripts"
 chmod 755 $HYPR_SCRIPTS/*.sh # Ensure correct perm -vs
 
 # Hyprland ~/.config files

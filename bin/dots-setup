@@ -41,12 +41,12 @@ migrate_to_nm() {
 }
 
 install_qemu() {
-  $SCRIPTS/install-qemu.sh
+  $SCRIPTS/install/install-qemu.sh
 }
 
 install_firefox() {
   # Install it
-  gum spin --spinner "$SPINNER" --title "Setting up Firefox..." -- $SCRIPTS/setup-firefox.sh
+  gum spin --spinner "$SPINNER" --title "Setting up Firefox..." -- $SCRIPTS/install/setup-firefox.sh
   echo "rad"
 
   # Prompt for webapp support
@@ -60,12 +60,12 @@ install_firefox() {
 }
 
 install_themesync() {
-  gum spin --spinner "$SPINNER" --title "Installing omarchy-theme-sync..." -- $SCRIPTS/install-theme-sync.sh
+  gum spin --spinner "$SPINNER" --title "Installing omarchy-theme-sync..." -- $SCRIPTS/install/install-theme-sync.sh
   gum spin --spinner "$SPINNER" --title "Symlinking theme-sync configs..." -- $SCRIPTS/link-theme-sync-config.sh
 }
 
 install_kanata() {
-  $SCRIPTS/laptop_kanata_enthium.sh
+  $SCRIPTS/install/laptop_kanata_enthium.sh
   if gum confirm "Are you SURE you want to install the enthium layout? It might break you."; then
     echo "cool"
     gum spin --spinner "$SPINNER" --title "Installing Kanata & Enthium..." -- $SCRIPTS/laptop_kanata_enthium.sh
@@ -75,11 +75,11 @@ install_kanata() {
 }
 
 install_opencode() {
-  $SCRIPTS/install-opencode.sh
+  $SCRIPTS/install/install-opencode.sh
 }
 
 install_zellij() {
-  $SCRIPTS/install-zellij.sh
+  $SCRIPTS/install/install-zellij.sh
 }
 
 ###                        ###
