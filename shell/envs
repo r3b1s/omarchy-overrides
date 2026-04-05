@@ -1,11 +1,11 @@
-# environment variables
-
-export PATH="$HOME/.local/bin:$HOME/.cache/.bun/bin:$PATH:$HOME/.cargo/bin:"
-export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock
-
+# custom environment variables
 export DOTS=$HOME/.local/share/omarchy-overrides
 export DOTS_BIN="$HOME/.local/share/omarchy-overrides/scripts/bin"
 export USER_BIN=$HOME/.local/bin
+
+# system environment variables
+export PATH="$HOME/.local/bin:$DOTS_BIN:$HOME/.cache/.bun/bin:$PATH:$HOME/.cargo/bin:"
+export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock
 
 # Disabling Telemetry
 DISABLE_TELEMETRY=1                              # generic best-effort
