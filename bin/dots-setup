@@ -2,9 +2,9 @@
 # Install the whole shebang
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
-USER_DOTS="$USER_HOME/.local/share/omarchy-overrides"
-SCRIPTS="$USER_DOTS/scripts"
-USER_BINS="$USER_DOTS/scripts/bin"
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
+SCRIPTS="$DOTS/scripts"
+DOTS_BIN="$DOTS/bin"
 LOCAL_BIN="$USER_HOME/.local/bin"
 
 SPINNER="pulse"
@@ -147,7 +147,7 @@ while IFS= read -r item <&3 ; do
       ;;
     'Alternative-Shell')
       echo -e "\nLet's pick ur sh3ll"
-      $USER_DOTS/scripts/bin/omarchy-choose-shell
+      $DOTS/bin/omarchy-choose-shell
       ;;
   esac
 done 3<<< "$items"

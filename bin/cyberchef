@@ -70,7 +70,7 @@ cmd_install() {
     "CyberChef" \
     "${URL}" \
     "${URL}/images/cyberchef-128x128.png" \
-    "$USER_HOME/.local/share/omarchy-overrides/scripts/bin/cyberchef launch"
+    "$USER_HOME/.local/share/omarchy-overrides/bin/cyberchef launch"
 }
 
 cmd_uninstall() {

@@ -1,0 +1,5 @@
+#!/bin/bash
+USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
+
+ghostty --working-directory="$DOTS" &> /dev/null &

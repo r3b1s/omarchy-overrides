@@ -4,13 +4,13 @@
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 
 # Dotfiles
-USER_DOTS="$USER_HOME/.local/share/omarchy-overrides"
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
 
 # omarchy-theme-sync
 THEMESYNC_CFG="$USER_HOME/.config/omarchy-theme-sync"
 mkdir -p $THEMESYNC_CFG
 
-for d in "$USER_DOTS/omarchy-theme-sync"/*/; do
+for d in "$DOTS/omarchy-theme-sync"/*/; do
   echo -e "\nLinking $d theme-sync configs..."
   folder=$(basename "$d")
   for f in "$d"/*; do

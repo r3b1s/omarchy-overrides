@@ -9,8 +9,8 @@ cd ..
 ###                  ###
 
 # Dotfiles
-USER_DOTS="$USER_HOME/.local/share/omarchy-overrides"
-HYPR_DOTS="$USER_DOTS/hypr"
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
+HYPR_DOTS="$DOTS/hypr"
 
 # Local
 HYPR_CFG="$USER_HOME/.config/hypr"
@@ -36,11 +36,11 @@ cp -f $HYPR_DOTS/looknfeel.conf $HYPR_CFG/looknfeel.conf
 
 # scripts
 mkdir -p $HYPR_SCRIPTS
-cp -f $USER_DOTS/scripts/hyprscripts/hyprgamemode.sh $HYPR_SCRIPTS/hyprgamemode.sh
-cp -f $USER_DOTS/scripts/hyprscripts/delta-resize.sh $HYPR_SCRIPTS/delta-resize.sh
-cp -f $USER_DOTS/scripts/hyprscripts/orientation-cycle.sh $HYPR_SCRIPTS/orientation-cycle.sh
-cp -f $USER_DOTS/scripts/hyprscripts/master-roll.sh $HYPR_SCRIPTS/master-roll.sh
-cp -f $USER_DOTS/scripts/hyprscripts/center-mfact-daemon.sh $HYPR_SCRIPTS/center-mfact-daemon.sh
+cp -f $DOTS/scripts/hyprscripts/hyprgamemode.sh $HYPR_SCRIPTS/hyprgamemode.sh
+cp -f $DOTS/scripts/hyprscripts/delta-resize.sh $HYPR_SCRIPTS/delta-resize.sh
+cp -f $DOTS/scripts/hyprscripts/orientation-cycle.sh $HYPR_SCRIPTS/orientation-cycle.sh
+cp -f $DOTS/scripts/hyprscripts/master-roll.sh $HYPR_SCRIPTS/master-roll.sh
+cp -f $DOTS/scripts/hyprscripts/center-mfact-daemon.sh $HYPR_SCRIPTS/center-mfact-daemon.sh
 chmod 755 $HYPR_SCRIPTS/*.sh
 
 ###                  ###
@@ -54,15 +54,15 @@ chmod 755 $HYPR_SCRIPTS/*.sh
 # tmux
 TMUX_CFG="$USER_HOME/.config/tmux"
 mkdir -p $TMUX_CFG
-cp -f $USER_DOTS/tmux/tmux.conf $TMUX_CFG/tmux.conf
+cp -f $DOTS/tmux/tmux.conf $TMUX_CFG/tmux.conf
 
 # fcitx5
 FCITX5_CFG="$USER_HOME/.config/fcitx5/conf"
 mkdir -p $FCITX5_CFG
-cp -f $USER_DOTS/fcitx5/spell.conf $FCITX5_CFG/spell.conf
+cp -f $DOTS/fcitx5/spell.conf $FCITX5_CFG/spell.conf
 
 # Waybar
-cp -f $USER_DOTS/waybar/config.jsonc $USER_HOME/.config/waybar/config.jsonc
+cp -f $DOTS/waybar/config.jsonc $USER_HOME/.config/waybar/config.jsonc
 
 ###                  ###
 ######## Other #########

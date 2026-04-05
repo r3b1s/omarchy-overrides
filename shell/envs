@@ -1,6 +1,6 @@
 # custom environment variables
 export DOTS=$HOME/.local/share/omarchy-overrides
-export DOTS_BIN="$HOME/.local/share/omarchy-overrides/scripts/bin"
+export DOTS_BIN="$DOTS/bin"
 export USER_BIN=$HOME/.local/bin
 
 # system environment variables

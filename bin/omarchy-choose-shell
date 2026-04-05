@@ -1,9 +1,9 @@
 #!/bin/bash
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
-USER_DOTS="$USER_HOME/.local/share/omarchy-overrides"
-SCRIPTS="$USER_DOTS/scripts"
-USER_BINS="$USER_DOTS/scripts/bin"
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
+SCRIPTS="$DOTS/scripts"
+DOTS_BIN="$DOTS/bin"
 LOCAL_BIN="$USER_HOME/.local/bin"
 GHOSTTY_CFG="$USER_HOME/.config/ghostty"
 
@@ -22,7 +22,7 @@ config_terminal() {
   fi
 
   rm "$GHOSTTY_CFG/config"
-  ln -s "$USER_DOTS/ghostty/config" "$GHOSTTY_CFG/config"
+  ln -s "$DOTS/ghostty/config" "$GHOSTTY_CFG/config"
 }
 
 setup_bash() {
@@ -38,7 +38,7 @@ setup_bash() {
     stamped=$(grep -E "$stamp" $USER_HOME/.bashrc)
     if [[ -z "$stamped" ]]; then
       echo "No append stamp detected. Appending content..."
-      cat "$USER_DOTS/shell/bash/appendrc" >> "$USER_HOME/.bashrc"
+      cat "$DOTS/shell/bash/appendrc" >> "$USER_HOME/.bashrc"
     fi
   else
     echo "No .bashrc detected."
@@ -60,7 +60,7 @@ setup_zsh() {
     --title "Setting up zsh..." -- zsh -c "sleep 2; exit"
 
   if [[ -f "$USER_HOME/.zshrc" ]]; then
-    cat "$USER_DOTS/shell/zsh/appendrc" >> "$USER_HOME/.zshrc"
+    cat "$DOTS/shell/zsh/appendrc" >> "$USER_HOME/.zshrc"
   else
     echo "No .zshrc detected."
   fi
@@ -82,7 +82,7 @@ setup_fish() {
     -- fish -c "sleep 2; exit"
 
   if [[ -f "$USER_HOME/.config/fish/config.fish" ]]; then
-    cat "$USER_DOTS/shell/fish/append.fish" >> "$USER_HOME/.config/fish/config.fish"
+    cat "$DOTS/shell/fish/append.fish" >> "$USER_HOME/.config/fish/config.fish"
   else
     echo "No config.fish detected."
   fi
@@ -176,7 +176,7 @@ case $shell in
         rm "$USER_HOME/.bashrc"
         mv "$backup" "$USER_HOME/.bashrc"
       else
-        $USER_DOTS/scripts/bin/omarchy-choose-shell
+        $DOTS/bin/omarchy-choose-shell
         exit 0
       fi
     fi

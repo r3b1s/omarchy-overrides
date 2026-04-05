@@ -8,9 +8,9 @@
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 
 # Dotfiles
-USER_DOTS="$USER_HOME/.local/share/omarchy-overrides"
-HYPR_DOTS="$USER_DOTS/hypr"
-HYPR_SCRIPTS="$USER_DOTS/scripts/hyprscripts"
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
+HYPR_DOTS="$DOTS/hypr"
+HYPR_SCRIPTS="$DOTS/scripts/hyprscripts"
 chmod 755 $HYPR_SCRIPTS/*.sh # Ensure correct perm -vs
 
 # Hyprland ~/.config files
@@ -95,16 +95,16 @@ link() {
 
 
   # tmux
-	ln -s -v $USER_DOTS/tmux/tmux.conf $TMUX_CFG/tmux.conf
+	ln -s -v $DOTS/tmux/tmux.conf $TMUX_CFG/tmux.conf
 
   # fcitx5
-	ln -s -v $USER_DOTS/fcitx5/spell.conf $FCITX5_CFG/spell.conf
+	ln -s -v $DOTS/fcitx5/spell.conf $FCITX5_CFG/spell.conf
 
   # Waybar
-	ln -s -v $USER_DOTS/waybar/config.jsonc $WAYBAR_CFG/config.jsonc
+	ln -s -v $DOTS/waybar/config.jsonc $WAYBAR_CFG/config.jsonc
 
   # ghostty
-  ln -s -v $USER_DOTS/ghostty/config $GHOSTTY_CFG/config
+  ln -s -v $DOTS/ghostty/config $GHOSTTY_CFG/config
 
   #####################################
   ### EXEMPT FROM SEVERING & BACKUP ###
@@ -126,16 +126,16 @@ link() {
 	ln -s -v $HYPR_SCRIPTS/center-mfact-daemon.sh $HYPR_LOCAL_SCRIPTS/center-mfact-daemon.sh # Daemon. Applies proper mfact in master-center layout orientation
 
   # omarchy-theme-sync
-  $USER_DOTS/scripts/link-theme-sync-config.sh
+  $DOTS/scripts/link-theme-sync-config.sh
 
   # link user bins
-  $USER_DOTS/scripts/link-bins.sh
+  $DOTS/scripts/link-bins.sh
 
   # neovim
   rm $USER_HOME/.config/nvim/lua/config/keymaps.lua
-  ln -s -v $USER_DOTS/nvim/lua/config/keymaps.lua $USER_HOME/.config/nvim/lua/config/keymaps.lua
+  ln -s -v $DOTS/nvim/lua/config/keymaps.lua $USER_HOME/.config/nvim/lua/config/keymaps.lua
   rm $USER_HOME/.config/nvim/lua/config/options.lua
-  ln -s -v $USER_DOTS/nvim/lua/config/options.lua $USER_HOME/.config/nvim/lua/config/options.lua
+  ln -s -v $DOTS/nvim/lua/config/options.lua $USER_HOME/.config/nvim/lua/config/options.lua
 
   ### EXEMPT FROM SEVERING & BACKUP ###
   #####################################

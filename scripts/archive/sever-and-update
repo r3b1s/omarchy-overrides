@@ -20,14 +20,14 @@
 #    previously conflicting files
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
-USER_DOTS="$USER_HOME/.local/share/omarchy-overrides"
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
 
 SPINNER="pulse"
 SPINNER_PULL="globe"
 
 # Unlink
 echo "Preparing environment for update:"
-gum spin --spinner "$SPINNER" --title "Decoupling Overrides..." -- $USER_DOTS/scripts/omarchy-unlink.sh;
+gum spin --spinner "$SPINNER" --title "Decoupling Overrides..." -- $DOTS/scripts/omarchy-unlink.sh;
 echo "Overrides Decoupled!"
 
 # Update Omarchy
@@ -46,7 +46,7 @@ npm-update;
 echo "npm-update finished!"
 
 # # Update Dotfiles
-# cd $USER_DOTS
+# cd $DOTS
 # gum spin --spinner "$SPINNER_PULL" --title "Pulling latest dotfiles..." -- git pull;
 # echo "Dotfiles are up-to-date."
 
@@ -54,7 +54,7 @@ echo "npm-update finished!"
 gum spin --spinner "$SPINNER" --title "Waiting a moment to let the system settle..." -- sleep 3;
 
 echo "Laying overrides..."
-gum spin --spinner "$SPINNER" --title "Recoupling..." -- $USER_DOTS/scripts/omarchy-relink.sh;
+gum spin --spinner "$SPINNER" --title "Recoupling..." -- $DOTS/scripts/omarchy-relink.sh;
 
 echo "END: sever-and-update"
 exit 0

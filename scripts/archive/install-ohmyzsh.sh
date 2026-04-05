@@ -2,7 +2,7 @@
 set -euo pipefail
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
-USER_DOTS="$USER_HOME/.local/share/omarchy-overrides"
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
 
 # Install zsh + Oh My Zsh on Arch Linux with vi-mode plugin
 # Run as your normal user (uses sudo for pacman/chsh)

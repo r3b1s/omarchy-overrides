@@ -3,7 +3,7 @@
 # omarchy's default themes.
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
-USER_DOTS=$USER_HOME/.local/share/omarchy-overrides
+DOTS=$USER_HOME/.local/share/omarchy-overrides
 
 themes=(
   "catppuccin"
@@ -25,7 +25,7 @@ themes=(
   "miasma"
 )
 
-BACKGROUNDS=$USER_DOTS/backgrounds
+BACKGROUNDS=$DOTS/backgrounds
 
 # If adding "sever" as the first argument,
 # unlink backgrounds.
@@ -46,7 +46,7 @@ else
     mkdir -p "$HOME/.config/omarchy/backgrounds/$theme"
     for i in 00 01 02 03 04 05 06 07 08 09; do
       if [[ -f $BACKGROUNDS/$i-$theme.png ]]; then
-        cp -v "$USER_DOTS/backgrounds/$i-$theme.png" "$HOME/.config/omarchy/backgrounds/$theme/$i-$theme.png"
+        cp -v "$DOTS/backgrounds/$i-$theme.png" "$HOME/.config/omarchy/backgrounds/$theme/$i-$theme.png"
       fi
     done
   done
