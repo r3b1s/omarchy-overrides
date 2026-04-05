@@ -7,5 +7,10 @@ cd $REPO_INSTALLS
 git clone https://github.com/AlexsJones/llmfit.git
 cd llmfit
 
+# Build frontend assets
+cd llmfit-web
+npm ci && npm run build
+cd ..
+
 # Build from source and install to cargo PATH (~/.cargo/bin/llmfit)
 cargo install --path llmfit-tui
