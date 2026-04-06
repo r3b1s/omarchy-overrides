@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# ~/.config/hypr/scripts/master-roll.sh
+# ~/.config/hypr/scripts/master-roll
 # Wraps rollnext/rollprev to fix a Hyprland quirk: when a window becomes
 # the new master via roll, it brings its own stored mfact (typically 0.5
 # from left/right orientation), causing it to expand wider than the slaves.
 # Works with both regular and special workspaces.
 #
 # Usage:
-#   master-roll.sh next
-#   master-roll.sh prev
+#   master-roll next
+#   master-roll prev
 
 MFACT=0.34
 DIRECTION="${1:-next}"

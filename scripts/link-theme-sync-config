@@ -23,4 +23,4 @@ for d in "$DOTS/omarchy-theme-sync"/*/; do
   done
 done
 
-echo -e "END: link-theme-sync-config.sh"
+echo -e "END: link-theme-sync-config"

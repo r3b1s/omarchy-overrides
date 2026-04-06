@@ -107,4 +107,4 @@ gum format -- "
 
 "
 
-echo -e "END: install-qemu.sh"
+echo -e "END: install-qemu"

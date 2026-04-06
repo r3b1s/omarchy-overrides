@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ~/.config/hypr/scripts/orientation-cycle.sh
+# ~/.config/hypr/scripts/orientation-cycle
 # Cycles through master layout orientations: left -> center -> right
 # and adjusts mfact accordingly (0.5 for left/right, 0.33 for center).
 # Works with both regular and special workspaces.

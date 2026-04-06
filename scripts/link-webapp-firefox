@@ -35,4 +35,4 @@ else
 fi
 
 sleep 2;
-echo -e "END: link-webapp-firefox.sh"
+echo -e "END: link-webapp-firefox"

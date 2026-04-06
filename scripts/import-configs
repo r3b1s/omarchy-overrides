@@ -36,12 +36,11 @@ cp -f $HYPR_DOTS/looknfeel.conf $HYPR_CFG/looknfeel.conf
 
 # scripts
 mkdir -p $HYPR_SCRIPTS
-cp -f $DOTS/hypr/scripts/hyprgamemode.sh $HYPR_SCRIPTS/hyprgamemode.sh
-cp -f $DOTS/hypr/scripts/delta-resize.sh $HYPR_SCRIPTS/delta-resize.sh
-cp -f $DOTS/hypr/scripts/orientation-cycle.sh $HYPR_SCRIPTS/orientation-cycle.sh
-cp -f $DOTS/hypr/scripts/master-roll.sh $HYPR_SCRIPTS/master-roll.sh
-cp -f $DOTS/hypr/scripts/center-mfact-daemon.sh $HYPR_SCRIPTS/center-mfact-daemon.sh
-chmod 755 $HYPR_SCRIPTS/*.sh
+cp -f $DOTS/hypr/scripts/delta-resize $HYPR_SCRIPTS/delta-resize
+cp -f $DOTS/hypr/scripts/orientation-cycle $HYPR_SCRIPTS/orientation-cycle
+cp -f $DOTS/hypr/scripts/master-roll $HYPR_SCRIPTS/master-roll
+cp -f $DOTS/hypr/scripts/center-mfact-daemon $HYPR_SCRIPTS/center-mfact-daemon
+chmod 755 $HYPR_SCRIPTS/*
 
 ###                  ###
 ####### Hyprland #######
@@ -77,4 +76,4 @@ killall waybar
 waybar > /dev/null 2>&1 &
 
 echo "Environment reloaded."
-echo -e "END: import-configs.sh"
+echo -e "END: import-configs"

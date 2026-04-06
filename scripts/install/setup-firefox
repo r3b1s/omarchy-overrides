@@ -56,4 +56,4 @@ fi
 # Set firefox as default browser
 xdg-settings set default-web-browser firefox.desktop
 
-echo "END: setup-firefox.sh"
+echo "END: setup-firefox"

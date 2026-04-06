@@ -27,7 +27,7 @@ SPINNER_PULL="globe"
 
 # Unlink
 echo "Preparing environment for update:"
-gum spin --spinner "$SPINNER" --title "Decoupling Overrides..." -- $DOTS/scripts/omarchy-unlink.sh;
+gum spin --spinner "$SPINNER" --title "Decoupling Overrides..." -- $DOTS/scripts/omarchy-unlink;
 echo "Overrides Decoupled!"
 
 # Update Omarchy
@@ -54,7 +54,7 @@ echo "npm-update finished!"
 gum spin --spinner "$SPINNER" --title "Waiting a moment to let the system settle..." -- sleep 3;
 
 echo "Laying overrides..."
-gum spin --spinner "$SPINNER" --title "Recoupling..." -- $DOTS/scripts/omarchy-relink.sh;
+gum spin --spinner "$SPINNER" --title "Recoupling..." -- $DOTS/scripts/omarchy-relink;
 
 echo "END: sever-and-update"
 exit 0

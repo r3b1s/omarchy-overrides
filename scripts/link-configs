@@ -11,7 +11,7 @@ USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 DOTS="$USER_HOME/.local/share/omarchy-overrides"
 HYPR_DOTS="$DOTS/hypr"
 HYPR_SCRIPTS="$DOTS/hypr/scripts"
-chmod 755 $HYPR_SCRIPTS/*.sh # Ensure correct perm -vs
+chmod 755 $HYPR_SCRIPTS/* # Ensure correct perm -vs
 
 # Hyprland ~/.config files
 HYPR_LOCAL="$USER_HOME/.config/hypr"
@@ -110,26 +110,23 @@ link() {
   ### EXEMPT FROM SEVERING & BACKUP ###
 
   # Hyprland Scripts
-  rm $HYPR_LOCAL_SCRIPTS/hyprgamemode.sh
-	ln -s -v $HYPR_SCRIPTS/hyprgamemode.sh $HYPR_LOCAL_SCRIPTS/hyprgamemode.sh # Decorations Toggle
+  rm $HYPR_LOCAL_SCRIPTS/delta-resize
+	ln -s -v $HYPR_SCRIPTS/delta-resize $HYPR_LOCAL_SCRIPTS/delta-resize # Calculates resize factor
   #
-  rm $HYPR_LOCAL_SCRIPTS/delta-resize.sh
-	ln -s -v $HYPR_SCRIPTS/delta-resize.sh $HYPR_LOCAL_SCRIPTS/delta-resize.sh # Calculates resize factor
+  rm $HYPR_LOCAL_SCRIPTS/orientation-cycle
+	ln -s -v $HYPR_SCRIPTS/orientation-cycle $HYPR_LOCAL_SCRIPTS/orientation-cycle # Master Layout orientation cycle
   #
-  rm $HYPR_LOCAL_SCRIPTS/orientation-cycle.sh
-	ln -s -v $HYPR_SCRIPTS/orientation-cycle.sh $HYPR_LOCAL_SCRIPTS/orientation-cycle.sh # Master Layout orientation cycle
+  rm $HYPR_LOCAL_SCRIPTS/master-roll
+	ln -s -v $HYPR_SCRIPTS/master-roll $HYPR_LOCAL_SCRIPTS/master-roll # Roll to next window with correct mfact for master center orientation
   #
-  rm $HYPR_LOCAL_SCRIPTS/master-roll.sh
-	ln -s -v $HYPR_SCRIPTS/master-roll.sh $HYPR_LOCAL_SCRIPTS/master-roll.sh # Roll to next window with correct mfact for master center orientation
-  #
-  rm $HYPR_LOCAL_SCRIPTS/center-mfact-daemon.sh
-	ln -s -v $HYPR_SCRIPTS/center-mfact-daemon.sh $HYPR_LOCAL_SCRIPTS/center-mfact-daemon.sh # Daemon. Applies proper mfact in master-center layout orientation
+  rm $HYPR_LOCAL_SCRIPTS/center-mfact-daemon
+	ln -s -v $HYPR_SCRIPTS/center-mfact-daemon $HYPR_LOCAL_SCRIPTS/center-mfact-daemon # Daemon. Applies proper mfact in master-center layout orientation
 
   # omarchy-theme-sync
-  $DOTS/scripts/link-theme-sync-config.sh
+  $DOTS/scripts/link-theme-sync-config
 
   # link user bins
-  $DOTS/scripts/link-bins.sh
+  $DOTS/scripts/link-bins
 
   # neovim
   rm $USER_HOME/.config/nvim/lua/config/keymaps.lua
@@ -214,4 +211,4 @@ reload_env;
 echo -e "\nEnvironment Reloaded.\n"
 sleep 3;
 
-echo -e "END: link-configs.sh $1"
+echo -e "END: link-configs $1"

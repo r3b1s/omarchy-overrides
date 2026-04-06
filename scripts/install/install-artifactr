@@ -6,4 +6,4 @@ echo "Attempting ssh git clone of llm-vaults"
 cd ~/repos
 git clone git@github.com:reg1z/llm-vaults.git
 
-echo "END: install-artifactr.sh"
+echo "END: install-artifactr"

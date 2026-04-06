@@ -10,13 +10,13 @@ DOTS="$USER_HOME/.local/share/omarchy-overrides"
 OMARCHY_BIN="$USER_HOME/.local/share/omarchy/bin"
 
 # Reimport Real Files
-$DOTS/scripts/import-backgrounds.sh
+$DOTS/scripts/import-backgrounds
 mv -v /tmp/omarchy-theme-sync $OMARCHY_BIN/omarchy-theme-sync
 
 # Reestablish Symbolic Links
-$DOTS/scripts/link-webapp-firefox.sh
-$DOTS/scripts/link-configs.sh link
+$DOTS/scripts/link-webapp-firefox
+$DOTS/scripts/link-configs link
 
 echo -e "Finished. Waiting a moment to let system settle..."
 sleep 3
-echo -e "END: omarchy-relink.sh"
+echo -e "END: omarchy-relink"

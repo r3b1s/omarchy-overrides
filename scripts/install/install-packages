@@ -24,4 +24,4 @@ flatpaks=(
 
 flatpak install -y ${flatpaks[@]}
 
-echo -e "END: install-packages.sh"
+echo -e "END: install-packages"

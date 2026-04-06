@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# ~/.config/hypr/scripts/center-mfact-daemon.sh
+# ~/.config/hypr/scripts/center-mfact-daemon
 # Listens for openwindow events via Hyprland's socket2.
 # When a window opens and it's the only tiled window on a workspace
 # in center orientation, re-applies mfact 0.34 to override the default.
 #
-# Start with:  exec-once = ~/.config/hypr/scripts/center-mfact-daemon.sh
+# Start with:  exec-once = ~/.config/hypr/scripts/center-mfact-daemon
 
 MFACT=0.34
 SOCKET="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"

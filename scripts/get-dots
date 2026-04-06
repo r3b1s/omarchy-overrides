@@ -15,6 +15,6 @@ cd $USER_HOME/repos
 echo "Cloning GitHub Repository..."
 git clone https://github.com/reg1z/omarchy-overrides
 cd omarchy-overrides/scripts
-./link-bins.sh
+./link-bins
 sleep 1
 dots-setup

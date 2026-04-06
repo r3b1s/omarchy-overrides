@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Undo script for install-qemu.sh
+# Undo script for install-qemu
 # Reverses all changes made by the QEMU/virt-manager installation
 
 set -euo pipefail
@@ -80,4 +80,4 @@ fi
 
 echo "QEMU and virt-manager uninstallation completed."
 echo "Note: You may need to log out and back in for group changes to take effect."
-echo -e "END: uninstall-qemu.sh"
+echo -e "END: uninstall-qemu"

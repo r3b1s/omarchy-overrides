@@ -30,7 +30,7 @@ yay -S --needed --noconfirm jq bc
 ###                        ###
 
 migrate_to_nm() {
-  $SCRIPTS/migrations/networkmanager-migrate.sh
+  $SCRIPTS/migrations/networkmanager-migrate
   if gum confirm "Would you like to install Gazelle, a TUI for NetworkManager?"; then
     echo "cool"
     echo "Installing Gazelle TUI..."
@@ -41,18 +41,18 @@ migrate_to_nm() {
 }
 
 install_qemu() {
-  $SCRIPTS/install/install-qemu.sh
+  $SCRIPTS/install/install-qemu
 }
 
 install_firefox() {
   # Install it
-  gum spin --spinner "$SPINNER" --title "Setting up Firefox..." -- $SCRIPTS/install/setup-firefox.sh
+  gum spin --spinner "$SPINNER" --title "Setting up Firefox..." -- $SCRIPTS/install/setup-firefox
   echo "rad"
 
   # Prompt for webapp support
   if gum confirm "Would you like to use firefox for WebApps?"; then
     echo "cool"
-    gum spin --spinner "$SPINNER" --title "Configuring omarchy-webapp-launcher..." -- $SCRIPTS/link-webapp-firefox.sh
+    gum spin --spinner "$SPINNER" --title "Configuring omarchy-webapp-launcher..." -- $SCRIPTS/link-webapp-firefox
   else
     echo "aight"
   fi
@@ -60,26 +60,26 @@ install_firefox() {
 }
 
 install_themesync() {
-  gum spin --spinner "$SPINNER" --title "Installing omarchy-theme-sync..." -- $SCRIPTS/install/install-theme-sync.sh
-  gum spin --spinner "$SPINNER" --title "Symlinking theme-sync configs..." -- $SCRIPTS/link-theme-sync-config.sh
+  gum spin --spinner "$SPINNER" --title "Installing omarchy-theme-sync..." -- $SCRIPTS/install/install-theme-sync
+  gum spin --spinner "$SPINNER" --title "Symlinking theme-sync configs..." -- $SCRIPTS/link-theme-sync-config
 }
 
 install_kanata() {
-  $SCRIPTS/install/laptop_kanata_enthium.sh
+  $SCRIPTS/install/laptop_kanata_enthium
   if gum confirm "Are you SURE you want to install the enthium layout? It might break you."; then
     echo "cool"
-    gum spin --spinner "$SPINNER" --title "Installing Kanata & Enthium..." -- $SCRIPTS/laptop_kanata_enthium.sh
+    gum spin --spinner "$SPINNER" --title "Installing Kanata & Enthium..." -- $SCRIPTS/laptop_kanata_enthium
   else
     echo "aight"
   fi
 }
 
 install_opencode() {
-  $SCRIPTS/install/install-opencode.sh
+  $SCRIPTS/install/install-opencode
 }
 
 install_zellij() {
-  $SCRIPTS/install/install-zellij.sh
+  $SCRIPTS/install/install-zellij
 }
 
 ###                        ###
@@ -155,7 +155,7 @@ done 3<<< "$items"
 if gum confirm "Wanna symlink / re-link the configs?"; then
   echo "hell ye"
   echo "Importing system configs..."
-  gum spin --spinner "$SPINNER_EMPHASIS" --title "Please don't touch anything..." -- $SCRIPTS/link-configs.sh link
+  gum spin --spinner "$SPINNER_EMPHASIS" --title "Please don't touch anything..." -- $SCRIPTS/link-configs link
 else
   echo "nice"
 fi
