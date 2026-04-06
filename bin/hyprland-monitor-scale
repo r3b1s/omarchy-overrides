@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Get the active monitor (the one with the cursor)
 MONITOR_INFO=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true)')

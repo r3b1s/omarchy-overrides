@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Import custom backgrounds into
 # omarchy's default themes.
 

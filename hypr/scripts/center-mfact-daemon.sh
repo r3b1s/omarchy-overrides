@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ~/.config/hypr/scripts/center-mfact-daemon.sh
 # Listens for openwindow events via Hyprland's socket2.
 # When a window opens and it's the only tiled window on a workspace

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Cycles window gaps between several standard options.
 
 gaps=$(hyprctl getoption general:gaps_out -j | jq -r '.custom' | awk '{print $1}')

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install the whole shebang
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")

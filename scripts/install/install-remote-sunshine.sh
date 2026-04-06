@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install sunshine remote desktop server
 # - Must be ran as sudo
 #

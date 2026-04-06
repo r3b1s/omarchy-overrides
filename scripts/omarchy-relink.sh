@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Reestablishes symbolic links &
 # reimports files.
 #

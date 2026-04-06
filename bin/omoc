@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/usr/bin/env bash
 OPENCODE_CONFIG_DIR="$HOME/.config/ohmyoc" exec opencode "$@"

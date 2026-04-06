@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 LAYOUTS="scrolling master"
 ms=1000

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # temp fix from ihazucha: https://github.com/basecamp/omarchy/discussions/3331#discussioncomment-15147786
 
 echo "Wiping keyring..."

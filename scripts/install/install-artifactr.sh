@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # one-liner
 curl -fsSL https://raw.githubusercontent.com/reg1z/artifactr/main/install.sh | bash
 

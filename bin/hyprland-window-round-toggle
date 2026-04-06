@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Toggle border roundedness
 
 round=$(hyprctl getoption decoration:rounding -j | jq -r '.int')

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ~/.config/hypr/scripts/master-roll.sh
 # Wraps rollnext/rollprev to fix a Hyprland quirk: when a window becomes
 # the new master via roll, it brings its own stored mfact (typically 0.5

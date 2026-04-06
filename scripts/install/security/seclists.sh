@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Clones the latest version of the SecLists repository
 # straight from the github source code.
 #

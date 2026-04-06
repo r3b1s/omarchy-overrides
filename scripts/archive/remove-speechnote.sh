@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Reverse all Speech Note and ydotool configuration
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")

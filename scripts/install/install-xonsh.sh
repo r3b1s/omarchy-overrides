@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Download latest xonsh AppImage
 
 XONSH="$HOME/.local/bin/xonsh"

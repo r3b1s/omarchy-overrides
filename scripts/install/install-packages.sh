@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Installs a list of personally preferred packages to the system.
 
 # Official Arch Repositories

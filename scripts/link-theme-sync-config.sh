@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Link omarchy-theme-sync configs
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")

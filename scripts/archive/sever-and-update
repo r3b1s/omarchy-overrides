@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # 1. Sever symlinks & remove
 #    conflicting files
 # 

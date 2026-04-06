@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Import all configs
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")

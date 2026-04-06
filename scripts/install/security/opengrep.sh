@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Opengrep installation script, sourced from
 # https://github.com/opengrep/opengrep
 

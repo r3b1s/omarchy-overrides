@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # mp4_to_gif.sh - Convert MP4 to high-quality optimized GIF using ffmpeg
 # Usage: ./mp4_to_gif.sh input.mp4 [output.gif] [width] [fps]
 

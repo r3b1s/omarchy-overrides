@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Undo script for install-qemu.sh
 # Reverses all changes made by the QEMU/virt-manager installation

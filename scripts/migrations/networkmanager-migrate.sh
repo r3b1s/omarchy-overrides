@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Replaces systemd-networkd with NetworkManager
 # Replaces Impala with nmtui
 

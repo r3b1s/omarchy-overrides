@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Sets up firefox as the default browser.
 # Firefox will be used PWAs in place of chromium.
 # System-wide policy will automatically install

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 MONITOR=$(hyprctl monitors -j | jq '.[] | select(.focused)')
 MONITOR_W=$(echo "$MONITOR" | jq '.width')
 MONITOR_H=$(echo "$MONITOR" | jq '.height')

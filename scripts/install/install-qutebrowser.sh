@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 
 yay -Syy

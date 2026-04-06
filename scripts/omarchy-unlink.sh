@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Remove / sever links to all potential
 # conflicts with the main omarchy repo
 #   (~/.local/share/omarchy)

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 REPO_INSTALLS="$USER_HOME/Applications/repos"
 

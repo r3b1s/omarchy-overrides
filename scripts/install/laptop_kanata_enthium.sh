@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Installs my kanata keyboard layout.
 # Clones into tmp and then cleans up files.
 exit 0

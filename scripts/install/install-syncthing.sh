@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install syncthing as a user service.
 
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
