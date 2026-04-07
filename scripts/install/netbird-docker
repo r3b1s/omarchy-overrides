@@ -44,6 +44,7 @@ services:
           - NB_ROSENPASS_PERMISSIVE=true
           - NB_ALLOW_SERVER_SSH=true
           - NB_DISABLE_SSH_AUTH=true
+          - NB_WG_PORT=51821
       volumes:
           - netbird-client:/var/lib/netbird
       image: netbirdio/netbird:latest
