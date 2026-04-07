@@ -4,16 +4,13 @@ set -eo pipefail
 USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 CONTAINERS="$USER_HOME/Applications/containers"
 
-exists() {
-  if docker inspect netbird-client &>/dev/null; then
-      return 0
-  else
-      return 1
-  fi
+does_it_exist() {
+  docker inspect netbird-client &>2
+  echo "$?"
 }
 
 install() {
-  [[ ! exists ]] || { echo 'Container netbird-client already exists. Check status with `netbird status`' >&2; exit 1; }
+  [[ does_it_exist ]] || { echo 'Container netbird-client already exists. Check status with `netbird status`' >&2; exit 1; }
   # Create our installation directory
   mkdir -p "$CONTAINERS/netbird-client"
 
@@ -63,7 +60,7 @@ EOF
 
 
 uninstall() {
-  [[ exists ]] || { echo 'Container netbird-client does not exist. Netbird is not installed.' >&2; exit 1; }
+  [[ ! does_it_exist ]] || { echo 'Container netbird-client does not exist. Netbird is not installed.' >&2; exit 1; }
   read -rp "Are you sure you want to uninstall netbird? This is destructive. You will have to add a new peer to restore functionality. [Y/n] " confirm
   [[ "${confirm,,}" == "n" ]] && exit 0
   
