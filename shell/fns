@@ -1,4 +1,36 @@
-# Relinks custom executables
+# Generic helper for accessing containerized CLIs
+_container_cmd() {
+    local container="$1"
+    local cmd="$2"
+    shift 2
+	
+	# Check for existence
+    if ! docker inspect "$container" &>/dev/null; then
+        echo "Container '$container' does not exist" >&2
+        return 1
+    fi
+	
+	# Check for state
+    if ! docker inspect -f '{{.State.Running}}' "$container" 2>/dev/null | grep -q true; then
+        echo "Container '$container' is not running" >&2
+        return 1
+    fi
+	
+	# Run command (& prevent terminal control character corruption)
+    if [ -t 1 ]; then
+        docker exec -it "$container" "$cmd" "$@"
+    else
+        docker exec -i "$container" "$cmd" "$@"
+    fi
+}
+
+# Declare containerized CLIs using the helper
+netbird() { _container_cmd netbird-client netbird "$@"; }
+# future examples:
+# restic()   { _container_cmd restic-container restic "$@"; }
+# rclone()   { _container_cmd rclone-container rclone "$@"; }
+
+# Relink custom executables to user's bin/ folder
 linkbin () {
   local DOTS_BIN=$HOME/.local/share/omarchy-overrides/bin
   local LOCAL_BIN=$HOME/.local/bin
@@ -10,3 +42,4 @@ linkbin () {
     ln -s -v "$DOTS_BIN"/"$file" "$LOCAL_BIN"/"$file"
   done
 }
+
