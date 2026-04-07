@@ -5,8 +5,9 @@ USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 CONTAINERS="$USER_HOME/Applications/containers"
 
 exists() {
-  if ! docker inspect netbird-client &>/dev/null; then
-      echo "Container netbird-client does not exist" >&2
+  if docker inspect netbird-client &>/dev/null; then
+      return 0
+  else
       return 1
   fi
 }
