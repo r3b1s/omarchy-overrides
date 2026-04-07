@@ -10,7 +10,7 @@ does_it_exist() {
 }
 
 install() {
-  [[ does_it_exist ]] || { echo 'Container netbird-client already exists. Check status with `netbird status`' >&2; exit 1; }
+  [[ $(does_it_exist) -eq 1 ]] || { echo 'Container netbird-client already exists. Check status with `netbird status`' >&2; exit 1; }
   # Create our installation directory
   mkdir -p "$CONTAINERS/netbird-client"
 
@@ -40,6 +40,7 @@ services:
       network_mode: host
       environment:
           - NB_SETUP_KEY
+          - NB_ENABLE_ROSENPASS=true
       volumes:
           - netbird-client:/var/lib/netbird
       image: netbirdio/netbird:latest
@@ -52,8 +53,20 @@ EOF
   cd "$CONTAINERS/netbird-client"
   echo "Starting Netbird..."
   docker compose up -d && echo -e "\nSuccess!\n"
+
+  echo "Waiting for container to spin up before continuing setup..."
+
+  until docker inspect -f '{{.State.Running}}' netbird-client 2>/dev/null | grep -q true; do
+    sleep 1
+  done
+
   docker exec netbird-client netbird down
-  docker exec netbird-client netbird up --enable-rosenpass && echo "Netbird up with rosenpass post-quantum cryptography enabled."
+  docker exec netbird-client netbird up \
+    --enable-rosenpass \
+    --allow-server-ssh \
+    --enable-ssh-local-port-forwarding \
+    --enable-ssh-remote-port-forwarding \
+    --disable-ssh-auth && echo "Netbird up with rosenpass post-quantum cryptography enabled."
 
   echo '`netbird status` -> Check status of netbird network & this peer'
   return 0
@@ -61,7 +74,7 @@ EOF
 
 
 uninstall() {
-  [[ ! does_it_exist ]] || { echo 'Container netbird-client does not exist. Netbird is not installed.' >&2; exit 1; }
+  [[ $(does_it_exist) -eq 0 ]] || { echo 'Container netbird-client does not exist. Netbird is not installed.' >&2; exit 1; }
   read -rp "Are you sure you want to uninstall netbird? This is destructive. You will have to add a new peer to restore functionality. [Y/n] " confirm
   [[ "${confirm,,}" == "n" ]] && exit 0
   
