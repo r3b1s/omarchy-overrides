@@ -5,7 +5,7 @@ USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 CONTAINERS="$USER_HOME/Applications/containers"
 
 does_it_exist() {
-  docker inspect netbird-client &>2
+  docker inspect netbird-client &>/dev/null
   echo "$?"
 }
 
@@ -41,6 +41,9 @@ services:
       environment:
           - NB_SETUP_KEY
           - NB_ENABLE_ROSENPASS=true
+          - NB_ROSENPASS_PERMISSIVE=true
+          - NB_ALLOW_SERVER_SSH=true
+          - NB_DISABLE_SSH_AUTH=true
       volumes:
           - netbird-client:/var/lib/netbird
       image: netbirdio/netbird:latest
@@ -54,21 +57,7 @@ EOF
   echo "Starting Netbird..."
   docker compose up -d && echo -e "\nSuccess!\n"
 
-  echo "Waiting for container to spin up before continuing setup..."
-
-  until docker inspect -f '{{.State.Running}}' netbird-client 2>/dev/null | grep -q true; do
-    sleep 1
-  done
-
-  docker exec netbird-client netbird down
-  docker exec netbird-client netbird up \
-    --enable-rosenpass \
-    --allow-server-ssh \
-    --enable-ssh-local-port-forwarding \
-    --enable-ssh-remote-port-forwarding \
-    --disable-ssh-auth && echo "Netbird up with rosenpass post-quantum cryptography enabled."
-
-  echo '`netbird status` -> Check status of netbird network & this peer'
+  echo '`netbird status -d` -> Check status of netbird network & this peer'
   return 0
 }
 
