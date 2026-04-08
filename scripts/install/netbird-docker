@@ -30,6 +30,7 @@ services:
   netbird-client:
       container_name: netbird-client
       hostname: $hostname
+      restart: unless-stopped
       cap_add:
           - NET_ADMIN
           - SYS_ADMIN
@@ -45,6 +46,7 @@ services:
           - NB_ALLOW_SERVER_SSH=true
           - NB_DISABLE_SSH_AUTH=true
           - NB_WG_PORT=51821
+          - NB_DNS_RESOLVER_ADDRESS=10.20.30.254:53
       volumes:
           - netbird-client:/var/lib/netbird
       image: netbirdio/netbird:latest
