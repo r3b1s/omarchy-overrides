@@ -5,7 +5,7 @@ USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 CONTAINERS="$USER_HOME/Applications/containers"
 
 does_it_exist() {
-  docker inspect netbird-client &>/dev/null
+  podman inspect netbird-client &>/dev/null
   echo "$?"
 }
 
@@ -57,8 +57,8 @@ EOF
 
   # Compose up
   cd "$CONTAINERS/netbird-client"
-  echo "Starting Netbird..."
-  docker compose up -d && echo -e "\nSuccess!\n"
+  echo "Starting Netbird with podman compose up..."
+  podman compose up -d && echo -e "\nSuccess!\n"
 
   echo '`netbird status -d` -> Check status of netbird network & this peer'
   return 0
@@ -71,7 +71,7 @@ uninstall() {
   [[ "${confirm,,}" == "n" ]] && exit 0
   
   cd "$CONTAINERS/netbird-client"
-  docker compose down --volumes --rmi all && echo "Uninstalled netbird."
+  podman compose down --volumes --rmi all && echo "Uninstalled netbird."
   return 0
 }
 

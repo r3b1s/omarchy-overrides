@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+sudo pacman -Syu
+sudo pacman -S --needed podman podman-compose
+
+systemctl --user enable --now podman.socket
+
