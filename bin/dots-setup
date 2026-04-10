@@ -23,7 +23,9 @@ echo "let's gooooo"
 # Update repos
 echo "Updating repos and installing dependencies..."
 yay -Syy
-yay -S --needed --noconfirm jq bc
+yay -S --needed --noconfirm jq bc git
+
+git config --global init.defaultBranch main
 
 ##############################
 ######### Functions ##########
