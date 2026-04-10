@@ -30,6 +30,7 @@ _container_cmd() {
 
 # Declare containerized CLIs using the helper
 netbird() { _container_cmd netbird-client netbird true "$@"; }
+km() { _container_cmd komodo km false "$@"; }
 # future examples:
 # restic()   { _container_cmd restic-container restic "$@"; }
 # rclone()   { _container_cmd rclone-container rclone "$@"; }
