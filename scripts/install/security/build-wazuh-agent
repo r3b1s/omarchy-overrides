@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+## From https://documentation.wazuh.com/4.14/deployment-options/wazuh-from-sources/wazuh-agent/index.html
+# - During the installation, users can decide the installation path. Execute the ./install.sh script and select the language, set the installation mode to agent, then set the installation path (Choose where to install Wazuh [/var/ossec]). The default installation path is /var/ossec. A commonly used custom path is /opt. When choosing a different path than the default, if the directory already exists, the installer will ask to delete the directory or proceed by installing Wazuh inside it. You can also run an unattended installation.
+# See wazuh agent enrollment steps here -> https://documentation.wazuh.com/4.14/user-manual/agent/agent-enrollment/index.html
+
+USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
+BUILD_DIR="$USER_HOME/Build"
+URL="https://github.com/wazuh/wazuh/archive/refs/tags/v4.14.4.tar.gz"
+
+mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
+
+curl -Ls "$URL" | tar zx
+cd wazuh-4.14.4
+
+# Clean the build (not necessary on first build)
+make -C src clean
+make -C src clean-deps
+
+cd src
+make TARGET=agent deps
+make TARGET=agent CC=gcc CXX=g++
+
+echo "Success! Run `install.sh` under ~/$?BUILD_DIR/wazuh-4.14.4 to begin the installation wizard."
