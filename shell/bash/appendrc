@@ -8,4 +8,4 @@ export RTK_TELEMETRY_DISABLED=1
 source $HOME/.local/share/omarchy-overrides/shell/envs # env vars
 source $DOTS/shell/aliases # aliases
 source $DOTS/shell/fns # functions
-
+source $DOTS/shell/other # everything else
