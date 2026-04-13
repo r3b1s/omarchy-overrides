@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# WIP, not intended to run as a standalone
+
+# Skills & software to trim excess tokens while improving accuracy of inference.
+# Software
+# - rtk "rust token killer" https://github.com/rtk-ai/rtk
+#
+# Skills / Plugins
+# - caveman https://github.com/JuliusBrussee/caveman
+
+# Caveman
+
+
+# Cavekit
+
