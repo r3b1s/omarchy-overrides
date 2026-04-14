@@ -128,11 +128,22 @@ link() {
   # link user bins
   $DOTS/scripts/link-bins
 
-  # neovim
+  ## neovim
+  # core cfg
   rm $USER_HOME/.config/nvim/lua/config/keymaps.lua
   ln -s -v $DOTS/nvim/lua/config/keymaps.lua $USER_HOME/.config/nvim/lua/config/keymaps.lua
   rm $USER_HOME/.config/nvim/lua/config/options.lua
   ln -s -v $DOTS/nvim/lua/config/options.lua $USER_HOME/.config/nvim/lua/config/options.lua
+  #
+  # plugin cfg
+  rm $USER_HOME/.config/nvim/lua/plugins/completion.lua
+  ln -s -v $DOTS/nvim/lua/plugins/completion.lua $USER_HOME/.config/nvim/lua/plugins/completion.lua
+  rm $USER_HOME/.config/nvim/lua/plugins/mason.lua
+  ln -s -v $DOTS/nvim/lua/plugins/mason.lua $USER_HOME/.config/nvim/lua/plugins/mason.lua
+  rm $USER_HOME/.config/nvim/lua/plugins/lsp.lua
+  ln -s -v $DOTS/nvim/lua/plugins/lsp.lua $USER_HOME/.config/nvim/lua/plugins/lsp.lua
+  rm $USER_HOME/.config/nvim/lua/plugins/ansible.lua
+  ln -s -v $DOTS/nvim/lua/plugins/ansible.lua $USER_HOME/.config/nvim/lua/plugins/ansible.lua
 
   ### EXEMPT FROM SEVERING & BACKUP ###
   #####################################
