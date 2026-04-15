@@ -1,1 +1,4 @@
 #!/usr/bin/env bash
+yay -Syu flatpak --noconfirm --needed
+flatpak install flathub com.moonlight_stream.Moonlight --assumeyes
+

@@ -98,7 +98,7 @@ link() {
 	ln -s -v $DOTS/tmux/tmux.conf $TMUX_CFG/tmux.conf
 
   # fcitx5
-	ln -s -v $DOTS/fcitx5/spell.conf $FCITX5_CFG/spell.conf
+	# ln -s -v $DOTS/fcitx5/spell.conf $FCITX5_CFG/spell.conf
 
   # Waybar
 	ln -s -v $DOTS/waybar/config.jsonc $WAYBAR_CFG/config.jsonc
