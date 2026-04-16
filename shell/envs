@@ -4,15 +4,15 @@
 ##############################
 ##############################
 
-## System-Native ###########
-export PATH="$USER_HOME/.local/bin:$DOTS_BIN:$USER_HOME/.cache/.bun/bin:$PATH:$USER_HOME/.cargo/bin:"
-export SSH_AUTH_SOCK=$USER_HOME/.bitwarden-ssh-agent.sock
-
 ## Custom ##################
 export USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 export USER_BIN=$USER_HOME/.local/bin
 export DOTS=$USER_HOME/.local/share/omarchy-overrides
 export DOTS_BIN="$DOTS/bin"
+
+## System-Native ###########
+export PATH="$USER_HOME/.local/bin:$DOTS_BIN:$USER_HOME/.cache/.bun/bin:$PATH:$USER_HOME/.cargo/bin:"
+export SSH_AUTH_SOCK=$USER_HOME/.bitwarden-ssh-agent.sock
 
 ##############################
 ##############################
@@ -39,10 +39,14 @@ export DOTS_BIN="$DOTS/bin"
 ## circumstances.           ##
 ##                          ##
 ## e.g.) An automatic audit ##
-## during pkg installation  ##
+## during npm pkg installs  ##
 ## can be useful & improve  ##
-## security posture         ##
+## security posture.        ##
+##                          ##
+## To enable it, set:       ##
 ## NPM_CONFIG_AUDIT=true    ##
+## - or remove this env var ##
+##   (defaults to true)     ##
 ##                          ##
 ##############################
 
