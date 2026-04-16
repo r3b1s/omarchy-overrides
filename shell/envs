@@ -52,7 +52,7 @@ export SSH_AUTH_SOCK=$USER_HOME/.bitwarden-ssh-agent.sock
 
 ## AI - gemini-cli #########
 export GEMINI_CLI_HOME="$USER_HOME/.gemini"
-export GEMINI_SANDBOX=true
+# export GEMINI_SANDBOX=podman
 export GEMINI_TELEMETRY_ENABLED=false                   # Telemetry | Google Gemini CLI (inverted: false = disabled)
 
 ## Shells ##################
