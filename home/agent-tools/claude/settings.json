@@ -1,0 +1,20 @@
+{
+  "hooks": {
+    "PreToolUse": [
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    }
+  },
+  "effortLevel": "medium",
+  "enabledPlugins": {
+    "caveman@caveman": true
+  },
+  "statusLine": {
+  }
+}
