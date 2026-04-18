@@ -1,4 +1,6 @@
 -- lua/plugins/lsp.lua
+local schema_dir = vim.fn.stdpath("config") .. "/schemas"
+
 return {
   "neovim/nvim-lspconfig",
   opts = {
@@ -46,18 +48,17 @@ return {
           yaml = {
             format = { enable = true },
             schemaStore = {
-              enable = true,
-              url = "https://www.schemastore.org/api/json/catalog.json",
+              enable = false,
             },
             schemas = {
-              kubernetes = "*.yaml",
-              ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
-              ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
-              ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
-              ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
-              ["http://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
-              ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
-              ["http://json.schemastore.org/docker-compose"] = "docker-compose.{yml,yaml}",
+              [schema_dir .. "/kubernetes.json"] = "*.yaml",
+              [schema_dir .. "/github-workflow.json"] = ".github/workflows/*",
+              [schema_dir .. "/github-action.json"] = ".github/action.{yml,yaml}",
+              [schema_dir .. "/ansible.json#/$defs/tasks"] = "roles/tasks/*.{yml,yaml}",
+              [schema_dir .. "/prettierrc.json"] = ".prettierrc.{yml,yaml}",
+              [schema_dir .. "/kustomization.json"] = "kustomization.{yml,yaml}",
+              [schema_dir .. "/chart.json"] = "Chart.{yml,yaml}",
+              [schema_dir .. "/docker-compose.json"] = "docker-compose.{yml,yaml}",
             },
           },
         },
