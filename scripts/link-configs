@@ -11,28 +11,28 @@ USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 DOTS="$USER_HOME/.local/share/omarchy-overrides"
 HYPR_DOTS="$DOTS/hypr"
 HYPR_SCRIPTS="$DOTS/hypr/scripts"
-chmod 755 $HYPR_SCRIPTS/* # Ensure correct perm -vs
+chmod 755 "$HYPR_SCRIPTS"/* # Ensure correct perm -vs
 
 # Hyprland ~/.config files
 HYPR_LOCAL="$USER_HOME/.config/hypr"
 HYPR_LOCAL_SCRIPTS="$HYPR_LOCAL/scripts"
-mkdir -p $HYPR_LOCAL_SCRIPTS # Ensure existence
+mkdir -p "$HYPR_LOCAL_SCRIPTS" # Ensure existence
 
 # Tmux
 TMUX_CFG="$USER_HOME/.config/tmux"
-mkdir -p $TMUX_CFG
+mkdir -p "$TMUX_CFG"
 
 # ghostty
 GHOSTTY_CFG="$USER_HOME/.config/ghostty"
-mkdir -p $GHOSTTY_CFG
+mkdir -p "$GHOSTTY_CFG"
 
 # fcitx5
 FCITX5_CFG="$USER_HOME/.config/fcitx5/conf"
-mkdir -p $FCITX5_CFG
+mkdir -p "$FCITX5_CFG"
 
 # waybar
 WAYBAR_CFG="$USER_HOME/.config/waybar"
-mkdir -p $WAYBAR_CFG
+mkdir -p "$WAYBAR_CFG"
 
 ###                  ###
 ###### Variables #######
@@ -44,9 +44,9 @@ mkdir -p $WAYBAR_CFG
 
 backup() {
   # Check for existing backups. Exit if present.
-  for f in $HYPR_LOCAL/*; do
+  for f in "$HYPR_LOCAL"/*; do
     name=$(basename "$f")
-    echo $name
+    echo "$name"
     if [[ "$name" == *.bak ]]; then
       echo "Backup already present. Ending execution."
       return 1
@@ -55,98 +55,98 @@ backup() {
 
   # Make backups for each file that corresponds
   # to a custom config.
-  for f in $HYPR_DOTS/*.conf; do
+  for f in "$HYPR_DOTS"/*.conf; do
     name=$(basename "$f") # extract lone file name w/ "basename"
     cp -v "$HYPR_LOCAL/$name" "$HYPR_LOCAL/$name.bak"
   done
 
-  cp -v $TMUX_CFG/tmux.conf $TMUX_CFG/tmux.conf.bak # tmux
-  cp -v $FCITX5_CFG/spell.conf $FCITX5_CFG/spell.conf.bak # fcitx5
-  cp -v $WAYBAR_CFG/config.jsonc $WAYBAR_CFG/config.jsonc.bak # waybar
+  cp -v "$TMUX_CFG/tmux.conf" "$TMUX_CFG/tmux.conf.bak" # tmux
+  cp -v "$FCITX5_CFG/spell.conf" "$FCITX5_CFG/spell.conf.bak" # fcitx5
+  cp -v "$WAYBAR_CFG/config.jsonc" "$WAYBAR_CFG/config.jsonc.bak" # waybar
 
-  cp -v $GHOSTTY_CFG/config $GHOSTTY_CFG/config.bak # ghostty
+  cp -v "$GHOSTTY_CFG/config" "$GHOSTTY_CFG/config.bak" # ghostty
 }
 
 restore() {
   echo -e "Restoring backups...\n"
-  for f in $HYPR_DOTS/*.conf; do
+  for f in "$HYPR_DOTS"/*.conf; do
     name=$(basename "$f") # extract lone file name w/ "basename"
     mv -v "$HYPR_LOCAL/$name.bak" "$HYPR_LOCAL/$name"
   done
 
-  mv -v $TMUX_CFG/tmux.conf.bak $TMUX_CFG/tmux.conf # tmux
-  mv -v $FCITX5_CFG/spell.conf.bak $FCITX5_CFG/spell.conf # fcitx5
-  mv -v $WAYBAR_CFG/config.jsonc.bak $WAYBAR_CFG/config.jsonc # waybar
-  mv -v $GHOSTTY_CFG/config.bak $GHOSTTY_CFG/config # ghostty
+  mv -v "$TMUX_CFG/tmux.conf.bak" "$TMUX_CFG/tmux.conf" # tmux
+  mv -v "$FCITX5_CFG/spell.conf.bak" "$FCITX5_CFG/spell.conf" # fcitx5
+  mv -v "$WAYBAR_CFG/config.jsonc.bak" "$WAYBAR_CFG/config.jsonc" # waybar
+  mv -v "$GHOSTTY_CFG/config.bak" "$GHOSTTY_CFG/config" # ghostty
   echo -e "\nBackups restored!"
 }
 
 link() {
   # Hyprland Configs
-	ln -s -v $HYPR_DOTS/input.conf $HYPR_LOCAL/input.conf
-	ln -s -v $HYPR_DOTS/bindings.conf $HYPR_LOCAL/bindings.conf
-	ln -s -v $HYPR_DOTS/bindings-submap-vm-passthru.conf $HYPR_LOCAL/bindings-submap-vm-passthru.conf
-	ln -s -v $HYPR_DOTS/layouts.conf $HYPR_LOCAL/layouts.conf
-	ln -s -v $HYPR_DOTS/monitors.conf $HYPR_LOCAL/monitors.conf
-	ln -s -v $HYPR_DOTS/windows.conf $HYPR_LOCAL/windows.conf
-	ln -s -v $HYPR_DOTS/autostart.conf $HYPR_LOCAL/autostart.conf
-	ln -s -v $HYPR_DOTS/envs.conf $HYPR_LOCAL/envs.conf
-	ln -s -v $HYPR_DOTS/looknfeel.conf $HYPR_LOCAL/looknfeel.conf
+	ln -s -v "$HYPR_DOTS/input.conf" "$HYPR_LOCAL/input.conf"
+	ln -s -v "$HYPR_DOTS/bindings.conf" "$HYPR_LOCAL/bindings.conf"
+	ln -s -v "$HYPR_DOTS/bindings-submap-vm-passthru.conf" "$HYPR_LOCAL/bindings-submap-vm-passthru.conf"
+	ln -s -v "$HYPR_DOTS/layouts.conf" "$HYPR_LOCAL/layouts.conf"
+	ln -s -v "$HYPR_DOTS/monitors.conf" "$HYPR_LOCAL/monitors.conf"
+	ln -s -v "$HYPR_DOTS/windows.conf" "$HYPR_LOCAL/windows.conf"
+	ln -s -v "$HYPR_DOTS/autostart.conf" "$HYPR_LOCAL/autostart.conf"
+	ln -s -v "$HYPR_DOTS/envs.conf" "$HYPR_LOCAL/envs.conf"
+	ln -s -v "$HYPR_DOTS/looknfeel.conf" "$HYPR_LOCAL/looknfeel.conf"
 
 
   # tmux
-	ln -s -v $DOTS/tmux/tmux.conf $TMUX_CFG/tmux.conf
+	ln -s -v "$DOTS/tmux/tmux.conf" "$TMUX_CFG/tmux.conf"
 
   # fcitx5
 	# ln -s -v $DOTS/fcitx5/spell.conf $FCITX5_CFG/spell.conf
 
   # Waybar
-	ln -s -v $DOTS/waybar/config.jsonc $WAYBAR_CFG/config.jsonc
+	ln -s -v "$DOTS/waybar/config.jsonc" "$WAYBAR_CFG/config.jsonc"
 
   # ghostty
-  ln -s -v $DOTS/ghostty/config $GHOSTTY_CFG/config
+  ln -s -v "$DOTS/ghostty/config" "$GHOSTTY_CFG/config"
 
   #####################################
   ### EXEMPT FROM SEVERING & BACKUP ###
 
   # Hyprland Scripts
-  rm $HYPR_LOCAL_SCRIPTS/delta-resize
-	ln -s -v $HYPR_SCRIPTS/delta-resize $HYPR_LOCAL_SCRIPTS/delta-resize # Calculates resize factor
+  rm "$HYPR_LOCAL_SCRIPTS/delta-resize"
+	ln -s -v "$HYPR_SCRIPTS/delta-resize" "$HYPR_LOCAL_SCRIPTS/delta-resize" # Calculates resize factor
   #
-  rm $HYPR_LOCAL_SCRIPTS/orientation-cycle
-	ln -s -v $HYPR_SCRIPTS/orientation-cycle $HYPR_LOCAL_SCRIPTS/orientation-cycle # Master Layout orientation cycle
+  rm "$HYPR_LOCAL_SCRIPTS/orientation-cycle"
+	ln -s -v "$HYPR_SCRIPTS/orientation-cycle" "$HYPR_LOCAL_SCRIPTS/orientation-cycle" # Master Layout orientation cycle
   #
-  rm $HYPR_LOCAL_SCRIPTS/master-roll
-	ln -s -v $HYPR_SCRIPTS/master-roll $HYPR_LOCAL_SCRIPTS/master-roll # Roll to next window with correct mfact for master center orientation
+  rm "$HYPR_LOCAL_SCRIPTS/master-roll"
+	ln -s -v "$HYPR_SCRIPTS/master-roll" "$HYPR_LOCAL_SCRIPTS/master-roll" # Roll to next window with correct mfact for master center orientation
   #
-  rm $HYPR_LOCAL_SCRIPTS/center-mfact-daemon
-	ln -s -v $HYPR_SCRIPTS/center-mfact-daemon $HYPR_LOCAL_SCRIPTS/center-mfact-daemon # Daemon. Applies proper mfact in master-center layout orientation
+  rm "$HYPR_LOCAL_SCRIPTS/center-mfact-daemon"
+	ln -s -v "$HYPR_SCRIPTS/center-mfact-daemon" "$HYPR_LOCAL_SCRIPTS/center-mfact-daemon" # Daemon. Applies proper mfact in master-center layout orientation
 
   # omarchy-theme-sync
-  $DOTS/scripts/link-theme-sync-config
+  "$DOTS/scripts/link-theme-sync-config"
 
   # link user bins
-  $DOTS/scripts/link-bins
+  "$DOTS/scripts/link-bins"
 
   ## neovim
   # core cfg
-  rm $USER_HOME/.config/nvim/lua/config/keymaps.lua
-  ln -s -v $DOTS/nvim/lua/config/keymaps.lua $USER_HOME/.config/nvim/lua/config/keymaps.lua
-  rm $USER_HOME/.config/nvim/lua/config/options.lua
-  ln -s -v $DOTS/nvim/lua/config/options.lua $USER_HOME/.config/nvim/lua/config/options.lua
+  rm "$USER_HOME/.config/nvim/lua/config/keymaps.lua"
+  ln -s -v "$DOTS/nvim/lua/config/keymaps.lua" "$USER_HOME/.config/nvim/lua/config/keymaps.lua"
+  rm "$USER_HOME/.config/nvim/lua/config/options.lua"
+  ln -s -v "$DOTS/nvim/lua/config/options.lua" "$USER_HOME/.config/nvim/lua/config/options.lua"
   #
   # plugin cfg
-  rm $USER_HOME/.config/nvim/lua/plugins/completion.lua
-  ln -s -v $DOTS/nvim/lua/plugins/completion.lua $USER_HOME/.config/nvim/lua/plugins/completion.lua
-  rm $USER_HOME/.config/nvim/lua/plugins/mason.lua
-  ln -s -v $DOTS/nvim/lua/plugins/mason.lua $USER_HOME/.config/nvim/lua/plugins/mason.lua
-  rm $USER_HOME/.config/nvim/lua/plugins/lsp.lua
-  ln -s -v $DOTS/nvim/lua/plugins/lsp.lua $USER_HOME/.config/nvim/lua/plugins/lsp.lua
-  rm $USER_HOME/.config/nvim/lua/plugins/ansible.lua
-  ln -s -v $DOTS/nvim/lua/plugins/ansible.lua $USER_HOME/.config/nvim/lua/plugins/ansible.lua
+  rm "$USER_HOME/.config/nvim/lua/plugins/completion.lua"
+  ln -s -v "$DOTS/nvim/lua/plugins/completion.lua" "$USER_HOME/.config/nvim/lua/plugins/completion.lua"
+  rm "$USER_HOME/.config/nvim/lua/plugins/mason.lua"
+  ln -s -v "$DOTS/nvim/lua/plugins/mason.lua" "$USER_HOME/.config/nvim/lua/plugins/mason.lua"
+  rm "$USER_HOME/.config/nvim/lua/plugins/lsp.lua"
+  ln -s -v "$DOTS/nvim/lua/plugins/lsp.lua" "$USER_HOME/.config/nvim/lua/plugins/lsp.lua"
+  rm "$USER_HOME/.config/nvim/lua/plugins/ansible.lua"
+  ln -s -v "$DOTS/nvim/lua/plugins/ansible.lua" "$USER_HOME/.config/nvim/lua/plugins/ansible.lua"
 
   ## starship
-  rm $USER_HOME/.config/starship.toml
+  rm "$USER_HOME/.config/starship.toml"
   ln -s -v "$DOTS/starship/starship.toml" "$USER_HOME/.config/starship.toml"
 
   ### EXEMPT FROM SEVERING & BACKUP ###
@@ -161,27 +161,27 @@ sever() {
   echo -e "\nSevering links..."
   # Hyprland Configs
   # (Does not include our personal imported scripts)
-  rm -v $HYPR_LOCAL/input.conf
-  rm -v $HYPR_LOCAL/bindings.conf
-  rm -v $HYPR_LOCAL/bindings-submap-vm-passthru.conf
-  rm -v $HYPR_LOCAL/layouts.conf
-  rm -v $HYPR_LOCAL/monitors.conf
-  rm -v $HYPR_LOCAL/windows.conf
-  rm -v $HYPR_LOCAL/autostart.conf
-  rm -v $HYPR_LOCAL/envs.conf
-  rm -v $HYPR_LOCAL/looknfeel.conf
+  rm -v "$HYPR_LOCAL/input.conf"
+  rm -v "$HYPR_LOCAL/bindings.conf"
+  rm -v "$HYPR_LOCAL/bindings-submap-vm-passthru.conf"
+  rm -v "$HYPR_LOCAL/layouts.conf"
+  rm -v "$HYPR_LOCAL/monitors.conf"
+  rm -v "$HYPR_LOCAL/windows.conf"
+  rm -v "$HYPR_LOCAL/autostart.conf"
+  rm -v "$HYPR_LOCAL/envs.conf"
+  rm -v "$HYPR_LOCAL/looknfeel.conf"
 
   # tmux
-  rm -v $TMUX_CFG/tmux.conf
+  rm -v "$TMUX_CFG/tmux.conf"
 
   # fcitx5
-  rm -v $FCITX5_CFG/spell.conf
+  rm -v "$FCITX5_CFG/spell.conf"
 
   # Waybar
-  rm -v $WAYBAR_CFG/config.jsonc
+  rm -v "$WAYBAR_CFG/config.jsonc"
 
   # ghostty
-  rm -v $GHOSTTY_CFG/config
+  rm -v "$GHOSTTY_CFG/config"
 
   echo -e "\nLinks severed!"
   sleep 5
