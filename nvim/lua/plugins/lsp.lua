@@ -51,7 +51,7 @@ return {
               enable = false,
             },
             schemas = {
-              [schema_dir .. "/kubernetes.json"] = "*.yaml",
+              [schema_dir .. "/kubernetes.json"] = "*.{k8s,kubernetes}.{yml,yaml}",
               [schema_dir .. "/github-workflow.json"] = ".github/workflows/*",
               [schema_dir .. "/github-action.json"] = ".github/action.{yml,yaml}",
               [schema_dir .. "/ansible.json#/$defs/tasks"] = "roles/tasks/*.{yml,yaml}",
