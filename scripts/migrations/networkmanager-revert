@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Reverts scripts/migrations/networkmanager-migrate
+# Restores Omarchy's default networking baseline:
+# - iwd enabled
+# - systemd-networkd enabled
+# - systemd-networkd-wait-online disabled and masked
+# - /etc/resolv.conf pointing at systemd-resolved's stub resolver
+
+set -uo pipefail
+
+echo "Switching from NetworkManager back to systemd-networkd"
+
+disable_unit_if_present() {
+  local unit=$1
+
+  if systemctl list-unit-files "$unit" >/dev/null 2>&1; then
+    if systemctl is-enabled --quiet "$unit" 2>/dev/null || systemctl is-active --quiet "$unit" 2>/dev/null; then
+      sudo systemctl disable --now "$unit"
+    fi
+  fi
+}
+
+remove_file_if_present() {
+  local path=$1
+
+  if [[ -e $path ]]; then
+    sudo rm -f "$path"
+  fi
+}
+
+disable_unit_if_present NetworkManager.service
+disable_unit_if_present NetworkManager-wait-online.service
+
+remove_file_if_present /etc/NetworkManager/conf.d/wifi_backend.conf
+remove_file_if_present /etc/NetworkManager/conf.d/dns.conf
+
+sudo rmdir /etc/NetworkManager/conf.d 2>/dev/null || true
+sudo rmdir /etc/NetworkManager 2>/dev/null || true
+
+if pacman -Q networkmanager >/dev/null 2>&1; then
+  yay -Rns --noconfirm gazelle-tui
+  sudo pacman -Rns --noconfirm networkmanager
+fi
+
+sudo systemctl daemon-reload
+
+# Omarchy uses iwd by default, not wpa_supplicant.
+if systemctl list-unit-files wpa_supplicant.service >/dev/null 2>&1; then
+  sudo systemctl disable --now wpa_supplicant.service 2>/dev/null || true
+  sudo systemctl unmask wpa_supplicant.service 2>/dev/null || true
+fi
+
+if [[ ! -L /etc/resolv.conf ]] || ! readlink /etc/resolv.conf | grep -q "systemd/resolve/stub-resolv.conf"; then
+  if [[ -f /etc/resolv.conf ]] && [[ ! -L /etc/resolv.conf ]]; then
+    echo "Backing up existing /etc/resolv.conf to /etc/resolv.conf.backup"
+    sudo cp /etc/resolv.conf /etc/resolv.conf.backup
+  fi
+
+  sudo rm -f /etc/resolv.conf
+  sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+fi
+
+remove_file_if_present /etc/systemd/system/systemd-networkd-wait-online.service.d/wait-for-only-one-interface.conf
+sudo rmdir /etc/systemd/system/systemd-networkd-wait-online.service.d 2>/dev/null || true
+
+sudo systemctl unmask systemd-networkd.service 2>/dev/null || true
+sudo systemctl unmask iwd.service systemd-resolved.service 2>/dev/null || true
+sudo systemctl enable --now systemd-networkd.service
+sudo systemctl enable --now iwd.service
+sudo systemctl enable --now systemd-resolved.service
+sudo systemctl disable --now systemd-networkd-wait-online.service 2>/dev/null || true
+sudo systemctl mask systemd-networkd-wait-online.service
+
+sudo systemctl restart systemd-networkd.service systemd-resolved.service
+
+echo -e "END: networkmanager-revert"
