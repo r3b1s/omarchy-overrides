@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+yay -Syu --needed --noconfirm openssl pkcs11-provider ykman yubico-piv-tool pcsclite ccid 
+sudo systemctl enable --now pcscd.service
