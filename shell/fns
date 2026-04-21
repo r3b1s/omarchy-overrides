@@ -48,3 +48,8 @@ linkbin () {
   done
 }
 
+# openssl with pkcs11 provider (smart card + hsm support)
+ossl () {
+  local OPENSSL_CONF=$HOME/.local/share/omarchy-overrides/openssl/openssl-pkcs11.cnf
+  openssl "$@"
+}
