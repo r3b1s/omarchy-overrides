@@ -1,3 +1,4 @@
 # shell aliases
 alias npx='bunx'
 alias gsd-install='bunx get-shit-done-cc@latest'
+alias step='step-cli'
