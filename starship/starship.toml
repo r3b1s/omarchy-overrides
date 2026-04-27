@@ -2,7 +2,7 @@ add_newline = true
 command_timeout = 200
 follow_symlinks = true
 format = """
-$username[@](bold cyan)$hostname[ -- ](bold cyan)[${custom.pwd}
+$username[@](bold cyan)$hostname[ -- ](bold green)[${custom.pwd}
 $git_branch$git_status]($style)$character
 """
 
