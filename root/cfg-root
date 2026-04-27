@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Setup script to import root-user-specific configurations.
+
+set -euo pipefail
+
+if [[ "$EUID" -ne 0 || -z "${SUDO_USER:-}" ]]; then
+  echo "This script must be ran with sudo." >&2
+  exit 1
+fi
+
+if [[ -z "${DOTS:-}" ]]; then
+  echo "The \$DOTS var must be set and non-empty (set it within your call)." >&2
+  exit 1
+fi
+
+
+setup_bashrc() {
+  local stamp='# ----- appended ----- omarchy-overrides -----'
+
+  if [[ -f "/root/.bashrc" ]]; then
+    stamped=$(grep -E "$stamp" "/root/.bashrc")
+    if [[ -z "$stamped" ]]; then
+      echo "No append stamp detected. Appending content..."
+      cat "$DOTS/shell/bash/appendrc" >> "/root/.bashrc"
+    else
+      echo "Root already has a valid .bashrc! Skipping..."
+    fi
+  else
+    echo "No .bashrc detected..."
+    echo "Importing appendrc as .bashrc"
+    cp "$DOTS/root/shell/bash/appendrc" "/root/.bashrc"
+  fi
+}
+
+setup_starship() {
+  echo 'Importing starship configuration.'
+  mkdir -p "/root/.config"
+  cp "$DOTS/root/starship/starship.toml" "/root/.config/starship.toml"
+}
+
+setup_bashrc
+setup_starship
+
+echo "Root user configs imported."
