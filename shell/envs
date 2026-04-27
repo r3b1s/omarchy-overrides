@@ -16,6 +16,8 @@ export GOBIN="$(go env GOPATH)/bin"
 ## System-Native ###########
 export PATH="$USER_HOME/.local/bin:$DOTS_BIN:$USER_HOME/.cache/.bun/bin:$PATH:$USER_HOME/.cargo/bin:$GOBIN"
 export SSH_AUTH_SOCK=$USER_HOME/.bitwarden-ssh-agent.sock
+export EDITOR=nvim
+export VISUAL=nvim
 
 
 ##############################
