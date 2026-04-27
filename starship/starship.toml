@@ -14,12 +14,12 @@ $git_branch$git_status]($style)$character
 
 [username]
 format = "[$user]($style)"
-style_user = "bold cyan"
-style_root = "bold red"
+show_always = true
 
+style_user = "bold cyan"
 [hostname]
 format = "[$hostname](bold cyan)[$ssh_symbol](bold green)"
-ssh_only = true
+ssh_only = false
 ssh_symbol = " -- \\[SSH\\]"
 disabled = false
 

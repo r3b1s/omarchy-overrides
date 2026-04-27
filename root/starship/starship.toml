@@ -10,10 +10,11 @@ $git_branch$git_status]($style)$character
 format = "[$user]($style)"
 style_user = "bold red"
 style_root = "bold red"
+show_always = true
 
 [hostname]
 format = "[$hostname](bold red)[$ssh_symbol](bold green)"
-ssh_only = true
+ssh_only = false
 ssh_symbol = " -- \\[SSH\\]"
 disabled = false
 
