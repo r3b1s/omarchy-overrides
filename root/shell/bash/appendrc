@@ -3,7 +3,7 @@
 # If not running interactively, don't do anything (leave this at the top of this file)
 [[ $- != *i* ]] && return
 
-#### Aliases
+#### Aliases & Functions
 
 # File system
 if command -v eza &> /dev/null; then
@@ -45,6 +45,9 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
+# Wipe & Shred History
+alias wipehist='history -c && shred -u ~/.bash_history'
+
 # Tools
 n() { if [ "$#" -eq 0 ]; then command nvim . ; else command nvim "$@"; fi; }
 
@@ -57,14 +60,14 @@ fip() {
     ssh -f -N -L "$port:localhost:$port" "$host" && echo "Forwarding localhost:$port -> $host:$port"
   done
 }
-
+#
 dip() {
   (( $# == 0 )) && echo "Usage: dip <port1> [port2] ..." && return 1
   for port in "$@"; do
     pkill -f "ssh.*-L $port:localhost:$port" && echo "Stopped forwarding port $port" || echo "No forwarding on port $port"
   done
 }
-
+#
 lip() {
   pgrep -af "ssh.*-L [0-9]+:localhost:[0-9]+" || echo "No active forwards"
 }

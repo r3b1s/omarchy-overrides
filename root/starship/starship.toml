@@ -2,34 +2,33 @@ add_newline = true
 command_timeout = 200
 follow_symlinks = true
 format = """
-$username[@](bold green)$hostname[ -- ](bold green)[${custom.pwd}
-$git_branch$git_status]($style)$character
+[\\[](bold red)$username[@](bold red)$hostname[\\[](bold red)[$directory]($style)[\\]](bold red)
+[$git_branch$git_status]($style)$character
 """
 
 [username]
 format = "[$user]($style)"
-style_user = "bold red"
-style_root = "bold red"
 show_always = true
 
+style_user = "bold red"
 [hostname]
-format = "[$hostname](bold red)[$ssh_symbol](bold green)"
+format = "[$hostname](bold red)[\\]](bold red)[$ssh_symbol](bold green)"
 ssh_only = false
-ssh_symbol = " -- \\[SSH\\]"
+ssh_symbol = "\\[SSH\\]"
 disabled = false
 
 [character]
-error_symbol = "[ ✗ # ](bold bg:red fg:black)"
+error_symbol = "[ ✗ # ](bold bg:bright-red fg:black)"
 success_symbol = "[ + \\$ ](bold bg:green fg:black)"
 
+## Default dir config
 [directory]
-disabled = true
-
-[custom.pwd]
-command = "echo $PWD"
-when = "true"
-format = "[$output]($style)"
+format = "[$path]($style)[$read_only]($read_only_style)"
 style = "bold red"
+home_symbol = "~"
+truncate_to_repo = false
+truncation_length = 200
+truncation_symbol = "…/"
 
 [git_branch]
 format = "[$branch]($style) "
