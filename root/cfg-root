@@ -13,7 +13,6 @@ if [[ -z "${DOTS:-}" ]]; then
   exit 1
 fi
 
-
 setup_bashrc() {
   local stamp='# ----- appended ----- omarchy-overrides -----'
 
@@ -30,12 +29,15 @@ setup_bashrc() {
     echo "Importing appendrc as .bashrc"
     cp "$DOTS/root/shell/bash/appendrc" "/root/.bashrc"
   fi
+
+  cat "$DOTS/root/shell/bash/appendrc" > /root/.bashrc
+  cat "$DOTS/root/shell/bash/inputrc" > /root/.inputrc
 }
 
 setup_starship() {
   echo 'Importing starship configuration.'
   mkdir -p "/root/.config"
-  cp "$DOTS/root/starship/starship.toml" "/root/.config/starship.toml"
+  cat "$DOTS/root/starship/starship.toml" > /root/.config/starship.toml
 }
 
 setup_bashrc

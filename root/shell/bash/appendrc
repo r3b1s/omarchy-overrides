@@ -1,12 +1,84 @@
 # ----- appended ----- omarchy-overrides -----
-eval "$(starship init bash)"
+
+# If not running interactively, don't do anything (leave this at the top of this file)
+[[ $- != *i* ]] && return
+
+#### Aliases
+
+# File system
+if command -v eza &> /dev/null; then
+  alias ls='eza -lh --group-directories-first --icons=auto'
+  alias lsa='ls -a'
+  alias lt='eza --tree --level=2 --long --icons --git'
+  alias lta='lt -a'
+fi
+
+if command -v zoxide &> /dev/null; then
+  alias cd="zd"
+  zd() {
+    if (( $# == 0 )); then
+      builtin cd ~ || return
+    elif [[ -d $1 ]]; then
+      builtin cd "$1" || return
+    else
+      if ! z "$@"; then
+        echo "Error: Directory not found"
+        return 1
+      fi
+
+      printf "\U000F17A9 "
+      pwd
+    fi
+  }
+fi
+
+open() (
+  xdg-open "$@" >/dev/null 2>&1 &
+)
+
+# Compression
+compress() { tar -czf "${1%/}.tar.gz" "${1%/}"; }
+alias decompress="tar -xzf"
+
+# Directories
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# Tools
+n() { if [ "$#" -eq 0 ]; then command nvim . ; else command nvim "$@"; fi; }
+
+# SSH Port Forwarding Functions
+fip() {
+  (( $# < 2 )) && echo "Usage: fip <host> <port1> [port2] ..." && return 1
+  local host="$1"
+  shift
+  for port in "$@"; do
+    ssh -f -N -L "$port:localhost:$port" "$host" && echo "Forwarding localhost:$port -> $host:$port"
+  done
+}
+
+dip() {
+  (( $# == 0 )) && echo "Usage: dip <port1> [port2] ..." && return 1
+  for port in "$@"; do
+    pkill -f "ssh.*-L $port:localhost:$port" && echo "Stopped forwarding port $port" || echo "No forwarding on port $port"
+  done
+}
+
+lip() {
+  pgrep -af "ssh.*-L [0-9]+:localhost:[0-9]+" || echo "No active forwards"
+}
+
 
 ##############################
 ##############################
 ####     bash settings    ####
 ##############################
 ##############################
+
 set -o vi # vi mode
+
+
 
 ##############################
 ##############################
@@ -15,8 +87,12 @@ set -o vi # vi mode
 ##############################
 
 ## System-Native ###########
-export EDITOR=nvim
-export VISUAL=nvim
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# Editor used by CLI
+export SUDO_EDITOR="$EDITOR"
+export BAT_THEME=ansi
 
 ## AI - gemini-cli #########
 # export GEMINI_CLI_HOME="$USER/.gemini"
@@ -85,3 +161,36 @@ export PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION=true # Telemetry | Pulumi plu
 
 ## Uncategorized
 export ALGOLIA_CLI_TELEMETRY=0                          # Telemetry | Algolia CLI (search platform)
+
+
+############
+#### init
+############
+
+# starship
+if [[ $- == *i* ]] && [[ ${TERM:-} != "dumb" ]] && command -v starship &> /dev/null; then
+  eval "$(starship init bash)"
+fi
+
+# zoxide
+if command -v zoxide &> /dev/null; then
+  eval "$(zoxide init bash)"
+fi
+
+# fzf
+if command -v fzf &> /dev/null; then
+  if [[ -f /usr/share/fzf/completion.bash ]]; then
+    source /usr/share/fzf/completion.bash
+  fi
+  if [[ -f /usr/share/fzf/key-bindings.bash ]]; then
+    source /usr/share/fzf/key-bindings.bash
+  fi
+fi
+
+# Autocompletion
+if [[ ! -v BASH_COMPLETION_VERSINFO && -f /usr/share/bash-completion/bash_completion ]]; then
+  source /usr/share/bash-completion/bash_completion
+fi
+
+
+[[ $- == *i* ]] && bind -f "/root/.inputrc"
