@@ -54,3 +54,7 @@ ossl () {
   local OPENSSL_CONF=$HOME/.local/share/omarchy-overrides/openssl/openssl-pkcs11.cnf
   openssl "$@"
 }
+
+genssh () {
+  ssh-keygen -t ed25519 -a 500 -f "$HOME/.ssh/$1" -C "$2"
+}
