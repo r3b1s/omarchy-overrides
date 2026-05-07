@@ -123,7 +123,7 @@ link() {
 	ln -s -v "$HYPR_SCRIPTS/center-mfact-daemon" "$HYPR_LOCAL_SCRIPTS/center-mfact-daemon" # Daemon. Applies proper mfact in master-center layout orientation
 
   # omarchy-theme-sync
-  "$DOTS/scripts/link-theme-sync-config"
+  #"$DOTS/scripts/link-theme-sync-config"
 
   # link user bins
   "$DOTS/scripts/link-bins"
