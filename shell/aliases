@@ -1,5 +1,5 @@
 # shell aliases
-alias npx='bunx'
+#alias npx='bunx'
 alias gsd-install='bunx get-shit-done-cc@latest'
 alias step='step-cli'
 alias wipehist='history -c && shred -u ~/.bash_history'
