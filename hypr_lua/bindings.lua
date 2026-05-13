@@ -207,8 +207,8 @@ local function special(name, options)
   if options.layout then
     rule.layout = options.layout
   end
-  if options.layoutopt then
-    rule.layoutopt = options.layoutopt
+  if options.layout_opts then
+    rule.layout_opts = options.layout_opts
   end
   if options.on_created_empty then
     rule.on_created_empty = options.on_created_empty
@@ -236,7 +236,7 @@ local function scratchpad(keys, name, command, opts)
   opts = opts or {}
   special(name, {
     layout = opts.layout,
-    layoutopt = opts.layoutopt,
+    layout_opts = opts.layout_opts,
     on_created_empty = command,
   })
 
@@ -325,7 +325,7 @@ for _, item in ipairs({
   bind(
     "SUPER + SHIFT + " .. item.label,
     hl.dsp.window.swap({ direction = item.dir }),
-    item.desc:gsub("Move focus", "Swap window")
+    (item.desc:gsub("Move focus", "Swap window"))
   )
 
   -- Move active window directionally, without swapping.
@@ -334,7 +334,7 @@ for _, item in ipairs({
   bind(
     "SUPER + SHIFT + CTRL + " .. item.label,
     hl.dsp.window.move({ direction = item.dir }),
-    item.desc:gsub("Move focus", "Move window")
+    (item.desc:gsub("Move focus", "Move window"))
   )
 end
 
@@ -891,7 +891,7 @@ scratchpad(
   terminal,
   {
     layout = "master",
-    layoutopt = { "orientation:center" },
+    layout_opts = { orientation = "center" },
     move_keys = "SUPER + SHIFT + CTRL + T",
     move_description = "Move to term1's dropdown",
   }
@@ -908,7 +908,7 @@ scratchpad(
   terminal,
   {
     layout = "master",
-    layoutopt = { "orientation:center" },
+    layout_opts = { orientation = "center" },
   }
 )
 
@@ -1180,7 +1180,7 @@ scratchpad(
   uwsmLaunch .. " org.cryptomator.Cryptomator",
   {
     layout = "master",
-    layoutopt = { "orientation:center" },
+    layout_opts = { orientation = "center" },
   }
 )
 
@@ -1210,7 +1210,7 @@ scratchpad(
   ' "https://chatgpt.com"; ' .. launchWebapp .. ' "https://claude.ai"; ' .. launchWebapp .. ' "https://perplexity.ai"',
   {
     layout = "master",
-    layoutopt = { "orientation:center" },
+    layout_opts = { orientation = "center" },
     move_keys = "SUPER + SHIFT + CTRL + A",
   }
 )
