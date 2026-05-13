@@ -422,39 +422,41 @@ bind(
 )
 
 -- Fullscreen states.
+local maximizeToggle = "if [ \"$(hyprctl activewindow -j | jq -r '.fullscreen')\" = \"1\" ]; then hyprctl dispatch 'hl.dsp.window.fullscreen_state({ internal = 0, client = -1, action = \"set\" })'; else hyprctl dispatch 'hl.dsp.window.fullscreen_state({ internal = 1, client = -1, action = \"set\" })'; fi"
+
 unbind("SUPER + F")
 unbind("SUPER + " .. key.f)
 bind(
   "SUPER + F",
-  hl.dsp.window.fullscreen_state({ internal = 1, client = -1 }),
+  hl.dsp.exec_cmd(maximizeToggle),
   "Maximize active window"
 )
 unbind("SUPER + SHIFT + F")
 unbind("SUPER + SHIFT + " .. key.f)
 bind(
   "SUPER + SHIFT + F",
-  hl.dsp.window.fullscreen_state({ internal = 2, client = 0 }),
+  hl.dsp.window.fullscreen_state({ internal = 2, client = 0, action = "toggle" }),
   "Window fullscreen (client unaware)"
 )
 unbind("SUPER + CTRL + F")
 unbind("SUPER + CTRL + " .. key.f)
 bind(
   "SUPER + CTRL + F",
-  hl.dsp.window.fullscreen_state({ internal = 0, client = 2 }),
+  hl.dsp.window.fullscreen_state({ internal = 0, client = 2, action = "toggle" }),
   "In-client fullscreen (window unaware)"
 )
 unbind("SUPER + ALT + F")
 unbind("SUPER + ALT + " .. key.f)
 bind(
   "SUPER + ALT + F",
-  hl.dsp.window.fullscreen_state({ internal = 3, client = 3 }),
+  hl.dsp.window.fullscreen_state({ internal = 3, client = 3, action = "toggle" }),
   "Typical fullscreen"
 )
 unbind("SUPER + SHIFT + CTRL + F")
 unbind("SUPER + SHIFT + CTRL + " .. key.f)
 bind(
   "SUPER + SHIFT + CTRL + F",
-  hl.dsp.window.fullscreen_state({ internal = 0, client = 0 }),
+  hl.dsp.window.fullscreen_state({ internal = 0, client = 0, action = "set" }),
   "Default window state"
 )
 
