@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+MONITOR=$(hyprctl monitors -j | jq '.[] | select(.focused)')
+MONITOR_W=$(echo "$MONITOR" | jq '.width')
+MONITOR_H=$(echo "$MONITOR" | jq '.height')
+
+FACTOR=0.055 # Percentage factor to use for calculating the delta
+
+DELTA_X=$(echo "$MONITOR_W * $FACTOR / 1" | bc)
+DELTA_Y=$(echo "$MONITOR_H * $FACTOR / 1" | bc)
+
+resize_active() {
+    hyprctl dispatch "hl.dsp.window.resize({ x = $1, y = $2, relative = true })"
+}
+
+case "$1" in
+    x) resize_active "$DELTA_X" 0 ;;
+    -x) resize_active "-$DELTA_X" 0 ;;
+    y) resize_active 0 "$DELTA_Y" ;;
+    -y) resize_active 0 "-$DELTA_Y" ;;
+esac

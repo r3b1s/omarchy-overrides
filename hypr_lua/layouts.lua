@@ -27,7 +27,7 @@ hl.unbind("SUPER + S")
 hl.bind("SUPER + S", hl.dsp.layout("swapwithmaster"), { description = "Swap Focused Window <-> Master" })
 
 hl.unbind("SUPER + N")
-hl.bind("SUPER + N", hl.dsp.exec_cmd(masterRoll .. " next; hyprctl dispatch layoutmsg focusmaster"), { description = "Roll to Next Window (Master Layout)" })
+hl.bind("SUPER + N", hl.dsp.exec_cmd(masterRoll .. " next; hyprctl dispatch 'hl.dsp.layout(\"focusmaster\")'"), { description = "Roll to Next Window (Master Layout)" })
 
 hl.unbind("SUPER + SHIFT + N")
 hl.bind("SUPER + SHIFT + N", hl.dsp.exec_cmd(masterRoll .. " prev"), { description = "Roll to Prev Window (Master Layout)" })

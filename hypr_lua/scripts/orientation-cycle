@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# ~/.config/hypr/scripts/orientation-cycle
+# Cycles through master layout orientations: left -> center -> right
+# and adjusts mfact accordingly (0.5 for left/right, 0.34 for center).
+# Works with both regular and special workspaces.
+
+MFACT=0.34
+
+eval_layout_pair() {
+    hyprctl eval "hl.dispatch(hl.dsp.layout(\"$1\")); hl.dispatch(hl.dsp.layout(\"$2\"))"
+}
+
+# Use activewindow to get workspace ID. This correctly returns
+# special workspace IDs (negative) unlike activeworkspace.
+WORKSPACE_ID=$(hyprctl activewindow -j | jq -r '.workspace.id')
+
+# Fallback to activeworkspace if no window is focused (empty workspace).
+if [ -z "$WORKSPACE_ID" ] || [ "$WORKSPACE_ID" = "null" ]; then
+    WORKSPACE_ID=$(hyprctl activeworkspace -j | jq -r '.id')
+fi
+
+STATE_FILE="/tmp/hypr_orientation_state_ws-${WORKSPACE_ID}"
+CURRENT_STATE=$(cat "$STATE_FILE" 2>/dev/null || echo "left")
+
+case "$CURRENT_STATE" in
+    left)
+        eval_layout_pair "orientationcenter" "mfact exact ${MFACT}"
+        echo "center" > "$STATE_FILE"
+        ;;
+    center)
+        eval_layout_pair "orientationright" "mfact exact 0.5"
+        echo "right" > "$STATE_FILE"
+        ;;
+    right)
+        eval_layout_pair "orientationleft" "mfact exact 0.5"
+        echo "left" > "$STATE_FILE"
+        ;;
+esac
