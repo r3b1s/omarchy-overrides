@@ -3,3 +3,6 @@
 alias gsd-install='bunx get-shit-done-cc@latest'
 alias step='step-cli'
 alias wipehist='history -c && shred -u ~/.bash_history'
+
+# Conventional Commits w/ koji, sign-off included
+alias ko="koji -c ~/.config/koji/config.toml && git commit --amend --no-edit -s"
