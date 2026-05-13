@@ -64,6 +64,10 @@ export GEMINI_TELEMETRY_ENABLED=false                   # Telemetry | Google Gem
 ## AI - RTK ################
 export RTK_TELEMETRY_DISABLED=1                         # Telemetry | Rust Token Killer
 
+## AI - Crush - CharmBracelet
+export CRUSH_DISABLE_METRICS=1
+export DO_NOT_TRACK=1
+
 ## Shells ##################
 export POWERSHELL_TELEMETRY_OPTOUT=1                    # Telemetry | PowerShell
 
