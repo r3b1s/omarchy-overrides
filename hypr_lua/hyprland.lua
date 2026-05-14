@@ -37,6 +37,7 @@ require("hypr.looknfeel")
 require("hypr.windows")
 require("hypr.bindings")
 require("hypr.bindings-submap-vm-passthru")
+require("hypr.bindings-submap-voxtype_suppress")
 require("hypr.layouts")
 
 -- require("default.hypr.toggles")

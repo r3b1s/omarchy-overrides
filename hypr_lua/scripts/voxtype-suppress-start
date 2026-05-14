@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+notify-send "Enabled Submap: voxtype_suppress"
+hyprctl dispatch 'hl.dsp.submap("voxtype_suppress")'
