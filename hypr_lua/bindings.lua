@@ -540,15 +540,41 @@ exec("SUPER + CTRL + R", bin .. "/gifrecord", "Screen Record GIF")
 -- ###                    ###
 
 local mic_mute_toggle = "pactl set-source-mute @DEFAULT_SOURCE@ toggle; notify-send 'Toggling Mic'"
+local mic_mute_toggle_discord = ""
 
 -- Mic Mute Toggle
+unbindAll({
+	"SUPER + ALT + apostrophe",
+	"SUPER + ALT + Apostrophe",
+	"SUPER + ALT + APOSTROPHE",
+	"SUPER + ALT + " .. key.apostrophe,
+})
+exec("SUPER + ALT + Apostrophe", mic_mute_toggle, "Mic Mute Toggle")
+
+-- Mic Mute Discord
+-- unbindAll({
+-- 	"SUPER + SHIFT + CTRL + M",
+-- 	"SUPER + SHIFT + CTRL + " .. key.m,
+-- })
 unbindAll({
 	"SUPER + apostrophe",
 	"SUPER + Apostrophe",
 	"SUPER + APOSTROPHE",
 	"SUPER + " .. key.apostrophe,
 })
-exec("SUPER + Apostrophe", mic_mute_toggle, "Mic Mute Toggle")
+-- via sending shortcut
+hl.bind(
+	"SUPER + Apostrophe",
+	hl.dsp.send_shortcut({
+		mods = "SHIFT + CTRL",
+		key = "M",
+		window = "class:^(vesktop)$",
+	}),
+	{ description = "Discord Mute Toggle" }
+)
+-- Pass keycombo for discord mute toggle
+-- - (alternate way VS sending shortcut as above)
+-- hl.bind("SHIFT + CTRL + M", hl.dsp.pass({ window = "class:^(vesktop)$" }))
 
 -- Voxtype speech-to-text binds.
 unbindAll({
@@ -907,16 +933,8 @@ unbindAll({
 	"SUPER + M",
 	"SUPER + " .. key.m,
 })
-unbindAll({
-	"SUPER + SHIFT + CTRL + M",
-	"SUPER + SHIFT + CTRL + " .. key.m,
-})
-scratchpad(
-	"SUPER + M",
-	"Grayjay",
-	uwsmLaunch .. " flatpak run app.grayjay.Grayjay",
-	{ move_keys = "SUPER + SHIFT + CTRL + M" }
-)
+scratchpad("SUPER + M", "Grayjay", uwsmLaunch .. " flatpak run app.grayjay.Grayjay")
+
 unbindAll({
 	"SUPER + SHIFT + M",
 	"SUPER + SHIFT + " .. key.m,
