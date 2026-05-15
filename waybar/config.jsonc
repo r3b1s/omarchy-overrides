@@ -16,7 +16,6 @@
   "modules-left": [
     "custom/omarchy",
     "clock#horizontal",
-    "clock#vertical",
     "custom/weather",
     "custom/update",
     // "custom/screenrecording-indicator",
@@ -166,7 +165,7 @@
   },
   "group/expand-icons": {
     "orientation": "inherit",
-    "modules": ["custom/expand-icon#horizontal", "custom/expand-icon#vertical"]
+    "modules": ["custom/expand-icon#horizontal"]
   },
   "custom/expand-icon#horizontal": {
     "format": "",
