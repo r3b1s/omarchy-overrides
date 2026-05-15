@@ -58,7 +58,7 @@ translate = false
 # threads = 4
 
 # When enabled, audio is split into chunks and transcribed in parallel with continued recording, reducing perceived latency on slower machines.
-eager_processing = true
+eager_processing = false
 eager_chunk_secs = 10.0
 eager_overlap_secs = 1.5
 
@@ -69,7 +69,7 @@ gpu_isolation = true
 context_window_optimization = true
 
 # Provides context to Whisper to improve transcription accuracy for domain-specific vocabulary. The prompt hints at terminology, proper nouns, or formatting conventions that Whisper should expect in the audio.
-initial_prompt = "Voxtype, Hyprland, Omarchy, Arch Linux, Waybar, Tiling Window Managers, programming languages, golang, systemd, linux, proxmox, ludus, VMs, journalctl, systemctl, kubectl, CLIs, command line, terminal, shell, and other IT & computer science related concepts."
+initial_prompt = "Voxtype, Hyprland, Omarchy, Arch Linux, Waybar, Tiling Window Managers, programming languages, golang, systemd, linux, proxmox, ludus, VMs, journalctl, systemctl, kubectl, CLIs, command line, terminal, cloud-init, shell, and other IT & computer science related concepts."
 
 [output]
 # Primary output mode: "type" or "clipboard"
@@ -91,7 +91,7 @@ fallback_to_clipboard = true
 
 # Delay between typed characters in milliseconds
 # 0 = fastest possible, increase if characters are dropped
-type_delay_ms = 1
+type_delay_ms = 2
 
 # Delay in milliseconds before typing starts. This allows the virtual keyboard to initialize and helps prevent the first character from being dropped on some compositors. Try 100-200ms if you experience issues.
 pre_type_delay_ms = 250
@@ -157,6 +157,9 @@ filler_words = ["uh", "um", "er", "ah", "eh", "hmm", "hm", "mm", "mhm"]
 "omarchi" = "Omarchy"
 "omachi" = "Omarchy"
 "umarchi" = "Omarchy"
+"cloudernet" = "cloud-init"
+"cloud in it" = "cloud-init"
+"cloudnet" = "cloud-init"
 
 [vad]
 # Voice Activity Detection configuration. When enabled, VAD filters silence-only recordings before transcription, preventing Whisper hallucinations when processing silence.
