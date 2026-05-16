@@ -6,3 +6,12 @@ alias wipehist='history -c && shred -u ~/.bash_history'
 
 # Conventional Commits w/ koji, sign-off included
 alias ko="koji -c ~/.config/koji/config.toml && git commit --amend --no-edit -s"
+
+################
+### AI Tools ###
+
+# kilo-code
+alias kc="kilo --continue"
+
+# opencode
+alias oc="opencode --continue"
