@@ -12,8 +12,16 @@
 MFACT=0.34
 DIRECTION="${1:-next}"
 
-# Use activewindow to get workspace ID — this correctly returns
-# special workspace IDs (negative) unlike activeworkspace
+dispatch_layout() {
+    hyprctl dispatch "hl.dsp.layout(\"$1\")"
+}
+
+eval_layout_pair() {
+    hyprctl eval "hl.dispatch(hl.dsp.layout(\"$1\")); hl.dispatch(hl.dsp.layout(\"$2\"))"
+}
+
+# Use activewindow to get workspace ID. This correctly returns
+# special workspace IDs (negative) unlike activeworkspace.
 WORKSPACE_ID=$(hyprctl activewindow -j | jq -r '.workspace.id')
 if [ -z "$WORKSPACE_ID" ] || [ "$WORKSPACE_ID" = "null" ]; then
     WORKSPACE_ID=$(hyprctl activeworkspace -j | jq -r '.id')
@@ -23,7 +31,7 @@ STATE_FILE="/tmp/hypr_orientation_state_ws-${WORKSPACE_ID}"
 CURRENT_STATE=$(cat "$STATE_FILE" 2>/dev/null || echo "left")
 
 if [ "$CURRENT_STATE" = "center" ]; then
-    hyprctl --batch "dispatch layoutmsg roll${DIRECTION} ; dispatch layoutmsg mfact exact ${MFACT}"
+    eval_layout_pair "roll${DIRECTION}" "mfact exact ${MFACT}"
 else
-    hyprctl dispatch layoutmsg "roll${DIRECTION}"
+    dispatch_layout "roll${DIRECTION}"
 fi
