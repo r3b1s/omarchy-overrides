@@ -161,6 +161,8 @@ filler_words = ["uh", "um", "er", "ah", "eh", "hmm", "hm", "mm", "mhm"]
 "cloud in it" = "cloud-init"
 "cloudnet" = "cloud-init"
 "edora" = "Fedora"
+"vadora" = "Fedora"
+"forgeo" = "forgejo"
 
 [vad]
 # Voice Activity Detection configuration. When enabled, VAD filters silence-only recordings before transcription, preventing Whisper hallucinations when processing silence.
