@@ -8,3 +8,7 @@ source $HOME/.local/share/omarchy-overrides/shell/envs # env vars
 source $DOTS/shell/aliases # aliases
 source $DOTS/shell/fns # functions
 source $DOTS/shell/other # everything else
+
+# mise
+
+eval "$(/usr/bin/mise activate bash)"
