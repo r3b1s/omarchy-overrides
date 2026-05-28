@@ -624,6 +624,7 @@ unbindAll({
 exec(
 	"SUPER + ALT + T",
 	uwsmLaunch .. ' ghostty --working-directory="$HOME/.local/share/omarchy-overrides"',
+	-- uwsmLaunch .. ' kitty --working-directory="$HOME/.local/share/omarchy-overrides"',
 	"Open terminal in omarchy-overrides dots"
 )
 
