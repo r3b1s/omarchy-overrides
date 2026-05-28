@@ -84,7 +84,7 @@ initial_prompt = "Voxtype, Hyprland, Omarchy, Arch Linux, Waybar, Tiling Window 
 # mode = "paste"
 # paste_keys = "super+v"
 
-mode = "type"
+mode = "clipboard"
 
 # Fall back to clipboard if typing fails
 fallback_to_clipboard = true
@@ -106,9 +106,11 @@ wtype_shift_prefix = true
 # Pre/Post Output Commands
 # Shell command to execute immediately before typing output. Runs after post-processing but before text is typed/pasted.
 pre_output_command = "bash ~/.config/hypr/scripts/voxtype-suppress-start"
+# pre_output_command = ""
 #
 # Shell command to execute immediately after typing output completes.
-post_output_command = "bash ~/.config/hypr/scripts/voxtype-suppress-end"
+# post_output_command = "bash ~/.config/hypr/scripts/voxtype-suppress-end"
+post_output_command = "wtype -M shift -P Insert -p Insert -m shift; bash ~/.config/hypr/scripts/voxtype-suppress-end"
 
 # Post-processing command (optional)
 # Pipe transcribed text through an external command for cleanup before output.
@@ -151,6 +153,7 @@ filler_words = ["uh", "um", "er", "ah", "eh", "hmm", "hm", "mm", "mhm"]
 "hyperwhisper" = "hyprwhspr"
 "hyperland" = "hyprland"
 "lutis" = "ludus"
+"lootis" = "ludus"
 "vox type" = "voxtype"
 "oh marchy" = "Omarchy"
 "oh marky" = "Omarchy"
@@ -163,6 +166,12 @@ filler_words = ["uh", "um", "er", "ah", "eh", "hmm", "hm", "mm", "mhm"]
 "edora" = "Fedora"
 "vadora" = "Fedora"
 "forgeo" = "forgejo"
+"PyHarnus" = "pi harness"
+"chemoed" = "chmod"
+"parts its" = "parses"
+"simlined" = "symlinked"
+"sim-lined" = "symlinked"
+"sim linked" = "symlinked"
 
 [vad]
 # Voice Activity Detection configuration. When enabled, VAD filters silence-only recordings before transcription, preventing Whisper hallucinations when processing silence.
