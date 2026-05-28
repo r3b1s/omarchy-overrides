@@ -50,7 +50,7 @@ linkbin () {
 }
 
 # openssl with pkcs11 provider (smart card + hsm support)
-ossl () {
+ossl11 () {
   local OPENSSL_CONF=$HOME/.local/share/omarchy-overrides/openssl/openssl-pkcs11.cnf
   openssl "$@"
 }
@@ -58,3 +58,17 @@ ossl () {
 genssh () {
   ssh-keygen -t ed25519 -a 500 -f "$HOME/.ssh/$1" -C "$2"
 }
+
+# wtype-based universal cut/copy/paste
+univ-cut () {
+  wtype -M ctrl -P x -p x -m shift
+}
+#
+univ-copy () {
+  wtype -M ctrl -P Insert -p Insert -m ctrl
+}
+#
+univ-paste () {
+  wtype -M shift -P Insert -p Insert -m shift
+}
+
