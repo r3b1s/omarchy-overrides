@@ -7,6 +7,7 @@ set -o vi # vi mode
 source $HOME/.local/share/omarchy-overrides/shell/envs # env vars
 source $DOTS/shell/aliases # aliases
 source $DOTS/shell/fns # functions
+source $DOTS/shell/pi-harness # custom functionality for the pi agent harness (pi.dev)
 source $DOTS/shell/other # everything else
 
 # mise
