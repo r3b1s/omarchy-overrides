@@ -3,8 +3,8 @@
 # zsh settings
 bindkey -v # vi mode
 
-# Ghostty shell integration (ssh wrapper, terminfo, cursor, etc.)
-source /usr/share/ghostty/shell-integration/zsh/ghostty-integration
+# Terminal-specific configs (uncomment as needed)
+# source $DOTS/shell/zsh/ghostty
 
 # sourcing
 export RTK_TELEMETRY_DISABLED=1

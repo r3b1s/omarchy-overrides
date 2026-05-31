@@ -3,8 +3,8 @@
 # bash settings
 set -o vi # vi mode
 
-# Ghostty shell integration (ssh wrapper, terminfo, cursor, etc.)
-source /usr/share/ghostty/shell-integration/bash/ghostty.bash
+# Terminal-specific configs (uncomment as needed)
+# source $DOTS/shell/bash/ghostty
 
 # sourcing
 source $HOME/.local/share/omarchy-overrides/shell/envs # env vars
