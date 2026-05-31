@@ -172,6 +172,17 @@ filler_words = ["uh", "um", "er", "ah", "eh", "hmm", "hm", "mm", "mhm"]
 "simlined" = "symlinked"
 "sim-lined" = "symlinked"
 "sim linked" = "symlinked"
+"technidium" = "technitium"
+"iavailability" = "high availability"
+"proxomox" = "proxmox"
+
+# Non-standard Punctuation
+# "TAC" = "-"
+# "tac" = "-"
+# "tack" = "-"
+# "tak" = "-"
+# "tacc" = "-"
+
 
 [vad]
 # Voice Activity Detection configuration. When enabled, VAD filters silence-only recordings before transcription, preventing Whisper hallucinations when processing silence.
@@ -185,3 +196,6 @@ backend = "auto"
 # - Higher values require louder, clearer speech.
 #
 # threshold = 0.3
+
+# [osd]
+# frontend = "quickshell"
