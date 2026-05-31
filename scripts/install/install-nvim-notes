@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
+SRC="$DOTS/nvim-notes"
+TARGET="$USER_HOME/.config/nvim-notes"
+STARTER="https://github.com/LazyVim/starter"
+
+if [[ ! -d "$SRC" ]]; then
+  echo "Missing source config: $SRC" >&2
+  exit 1
+fi
+
+if [[ ! -d "$TARGET" ]]; then
+  echo "Installing LazyVim starter to $TARGET"
+  git clone "$STARTER" "$TARGET"
+  rm -rf "$TARGET/.git"
+else
+  echo "Using existing config directory: $TARGET"
+fi
+
+mkdir -p "$TARGET"
+
+echo "Linking nvim-notes overrides from $SRC"
+while IFS= read -r -d '' file; do
+  rel="${file#$SRC/}"
+  mkdir -p "$TARGET/$(dirname "$rel")"
+  ln -sfn "$file" "$TARGET/$rel"
+done < <(find "$SRC" -type f -print0)
+
+echo "Done. Run with: NVIM_APPNAME=nvim-notes nvim"
