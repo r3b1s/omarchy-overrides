@@ -5,6 +5,7 @@ set -o vi # vi mode
 
 # Terminal-specific configs (uncomment as needed)
 # source $DOTS/shell/bash/ghostty
+# source $DOTS/shell/bash/alacritty
 
 # sourcing
 source $HOME/.local/share/omarchy-overrides/shell/envs # env vars

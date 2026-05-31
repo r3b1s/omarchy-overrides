@@ -5,6 +5,7 @@ bindkey -v # vi mode
 
 # Terminal-specific configs (uncomment as needed)
 # source $DOTS/shell/zsh/ghostty
+# source $DOTS/shell/zsh/alacritty
 
 # sourcing
 export RTK_TELEMETRY_DISABLED=1

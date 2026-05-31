@@ -2,3 +2,4 @@
 
 # Terminal-specific configs (uncomment as needed)
 # source $DOTS/shell/nushell/ghostty.nu
+# source $DOTS/shell/nushell/alacritty.nu
