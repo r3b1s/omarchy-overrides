@@ -6,27 +6,47 @@ DOTS="$USER_HOME/.local/share/omarchy-overrides"
 SRC="$DOTS/nvim-notes"
 TARGET="$USER_HOME/.config/nvim-notes"
 STARTER="https://github.com/LazyVim/starter"
+OMARCHY_NVIM_CONFIG="/usr/share/omarchy-nvim/config"
+OMARCHY_THEME="$USER_HOME/.config/omarchy/current/theme/neovim.lua"
+
+copy_omarchy_theme_files() {
+  if [[ ! -d "$OMARCHY_NVIM_CONFIG" ]]; then
+    echo "Skipping Omarchy theme files; missing $OMARCHY_NVIM_CONFIG" >&2
+    return 0
+  fi
+
+  mkdir -p "$TARGET/lua/plugins" "$TARGET/plugin/after"
+
+  cp "$OMARCHY_NVIM_CONFIG/lua/plugins/all-themes.lua" "$TARGET/lua/plugins/all-themes.lua"
+  cp "$OMARCHY_NVIM_CONFIG/lua/plugins/omarchy-theme-hotreload.lua" "$TARGET/lua/plugins/omarchy-theme-hotreload.lua"
+  cp "$OMARCHY_NVIM_CONFIG/plugin/after/transparency.lua" "$TARGET/plugin/after/transparency.lua"
+
+  ln -snf "$OMARCHY_THEME" "$TARGET/lua/plugins/theme.lua"
+}
 
 if [[ ! -d "$SRC" ]]; then
   echo "Missing source config: $SRC" >&2
   exit 1
 fi
 
-if [[ ! -d "$TARGET" ]]; then
-  echo "Installing LazyVim starter to $TARGET"
-  git clone "$STARTER" "$TARGET"
-  rm -rf "$TARGET/.git"
-else
-  echo "Using existing config directory: $TARGET"
+if [[ -d "$TARGET" ]]; then
+  if ! gum confirm "Existing $TARGET found. Overwrite it?"; then
+    echo "Aborted."
+    exit 0
+  fi
+  rm -rf "$TARGET"
 fi
 
-mkdir -p "$TARGET"
+echo "Installing LazyVim starter to $TARGET"
+git clone "$STARTER" "$TARGET"
+rm -rf "$TARGET/.git"
 
-echo "Linking nvim-notes overrides from $SRC"
-while IFS= read -r -d '' file; do
-  rel="${file#$SRC/}"
-  mkdir -p "$TARGET/$(dirname "$rel")"
-  ln -sfn "$file" "$TARGET/$rel"
-done < <(find "$SRC" -type f -print0)
+echo "Copying Omarchy theme integration"
+copy_omarchy_theme_files
+
+echo "Copying nvim-notes overrides from $SRC"
+cp -R "$SRC"/. "$TARGET"/
+
+ln -snf "$OMARCHY_THEME" "$TARGET/lua/plugins/theme.lua"
 
 echo "Done. Run with: NVIM_APPNAME=nvim-notes nvim"
