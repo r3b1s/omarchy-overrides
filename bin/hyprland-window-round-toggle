@@ -1,13 +1,7 @@
-#!/usr/bin/env bash
-# Toggle border roundedness
+#!/usr/bin/env sh
+set -eu
 
-round=$(hyprctl getoption decoration:rounding -j | jq -r '.int')
-ms=500
+script_path=$(readlink -f -- "$0")
+root_dir=$(dirname -- "$(dirname -- "$script_path")")
 
-if [[ $round == "0" ]]; then
-  hyprctl keyword decoration:rounding 10
-  notify-send "10px window rounding" -t "$ms"
-else
-  hyprctl keyword decoration:rounding 0
-  notify-send "0px window rounding" -t "$ms"
-fi
+hyprctl eval "package.path = [[${root_dir}/?.lua;]] .. package.path; package.loaded['hypr.actions'] = nil; require('hypr.actions').toggle_rounding()"

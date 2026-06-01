@@ -1,45 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
+set -eu
 
-LAYOUTS="scrolling master"
-ms=1000
-STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/hypr-cycle-layout.state"
+script_path=$(readlink -f -- "$0")
+root_dir=$(dirname -- "$(dirname -- "$script_path")")
 
-# Get workspace ID and name from activewindow
-# workspace line looks like: "workspace: -64 (special:term1)" or "workspace: 5 (5)"
-WS_LINE=$(hyprctl activewindow | awk '/workspace:/ {print}')
-WS_ID=$(echo "$WS_LINE" | awk '{print $2}')
-WS_NAME=$(echo "$WS_LINE" | awk '{gsub(/[()]/, "", $3); print $3}')
-
-# No focused window, nothing to do
-if [ -z "$WS_ID" ]; then
-    exit 0
-fi
-
-# Read persisted state
-LAST_WS=""
-LAST_IDX="-1"
-if [ -f "$STATE_FILE" ]; then
-    LAST_WS=$(awk 'NR==1' "$STATE_FILE")
-    LAST_IDX=$(awk 'NR==2' "$STATE_FILE")
-fi
-
-# If workspace changed (or first run), reset index to 0
-if [ "$WS_ID" != "$LAST_WS" ]; then
-    NEXT_IDX=0
-else
-    NEXT_IDX=$(( LAST_IDX + 1 ))
-fi
-
-# Count layouts and wrap
-LAYOUT_COUNT=$(echo "$LAYOUTS" | wc -w)
-NEXT_IDX=$(( NEXT_IDX % LAYOUT_COUNT ))
-
-# Pick the layout at NEXT_IDX
-NEXT_LAYOUT=$(echo "$LAYOUTS" | tr ' ' '\n' | awk "NR==$(( NEXT_IDX + 1 ))")
-
-# Persist state
-printf '%s\n%s\n' "$WS_ID" "$NEXT_IDX" > "$STATE_FILE"
-
-# Apply using name (handles both regular and special workspaces)
-hyprctl keyword "workspace" "name:$WS_NAME, layout:$NEXT_LAYOUT"
-notify-send "󰍹    Layout: $(echo "$NEXT_LAYOUT" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')" -t "$ms"
+hyprctl eval "package.path = [[${root_dir}/?.lua;]] .. package.path; package.loaded['hypr.actions'] = nil; require('hypr.actions').cycle_workspace_layout()"

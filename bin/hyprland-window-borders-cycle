@@ -1,31 +1,7 @@
-#!/usr/bin/env bash
-# Cycles cycle border size between several standard options.
+#!/usr/bin/env sh
+set -eu
 
-borders=$(hyprctl getoption general:border_size -j | jq -r '.int')
-ms=500
+script_path=$(readlink -f -- "$0")
+root_dir=$(dirname -- "$(dirname -- "$script_path")")
 
-if [ $borders == "0" ]; then
-  hyprctl keyword general:border_size 16
-  notify-send "󰍹    16px borders" -t "$ms"
-elif [[ $borders == "16" ]]; then
-  hyprctl keyword general:border_size 8
-  notify-send "󰍹    8px borders" -t "$ms"
-elif [[ $borders == "8" ]]; then
-  hyprctl keyword general:border_size 6
-  notify-send "󰍹    6px borders" -t "$ms"
-elif [[ $borders == "6" ]]; then
-  hyprctl keyword general:border_size 4
-  notify-send "󰍹    4px borders" -t "$ms"
-elif [[ $borders == "4" ]]; then
-  hyprctl keyword general:border_size 3
-  notify-send "󰍹    3px borders" -t "$ms"
-elif [[ $borders == "3" ]]; then
-  hyprctl keyword general:border_size 2
-  notify-send "󰍹    2px borders" -t "$ms"
-elif [[ $borders == "2" ]]; then
-  hyprctl keyword general:border_size 1
-  notify-send "󰍹    1px borders" -t "$ms"
-else
-  hyprctl keyword general:border_size 0
-  notify-send "󰍹    0px borders" -t "$ms"
-fi
+hyprctl eval "package.path = [[${root_dir}/?.lua;]] .. package.path; package.loaded['hypr.actions'] = nil; require('hypr.actions').cycle_borders()"

@@ -1,52 +1,7 @@
-#!/usr/bin/env bash
-# Cycles window gaps between several standard options.
+#!/usr/bin/env sh
+set -eu
 
-gaps=$(hyprctl getoption general:gaps_out -j | jq -r '.custom' | awk '{print $1}')
-borders=$(hyprctl getoption general:border_size -j | jq -r '.int')
-ms=500
+script_path=$(readlink -f -- "$0")
+root_dir=$(dirname -- "$(dirname -- "$script_path")")
 
-if [ $gaps == "0" ]; then
-#   hyprctl keyword general:gaps_out 200
-#   hyprctl keyword general:gaps_in 6
-#   notify-send "󰍹    6px inner gaps" "      200px outer gaps" -t "$ms"
-# elif [ $gaps == "200" ]; then
-  hyprctl keyword general:gaps_out "10, 100, 10, 100"
-  hyprctl keyword general:gaps_in 6
-  notify-send "󰍹    6px inner gaps" "      150px outer gaps" -t "$ms"
-elif [ $gaps == "150" ]; then
-  hyprctl keyword general:gaps_out 100
-  hyprctl keyword general:gaps_in 6
-  notify-send "󰍹    6px inner gaps" "      100px outer gaps" -t "$ms"
-elif [ $gaps == "100" ]; then
-  hyprctl keyword general:gaps_out 50
-  hyprctl keyword general:gaps_in 6
-  notify-send "󰍹    6px inner gaps" "      50px outer gaps" -t "$ms"
-elif [ $gaps == "0" ]; then
-  hyprctl keyword general:gaps_out 30
-  hyprctl keyword general:gaps_in 15
-  notify-send "󰍹    15px inner gaps" "      30px outer gaps" -t "$ms"
-elif [[ $gaps == "30" ]]; then
-  hyprctl keyword general:gaps_out 20
-  hyprctl keyword general:gaps_in 10
-  notify-send "󰍹    10px inner gaps" "      20px outer gaps" -t "$ms"
-elif [[ $gaps == "20" ]]; then
-  hyprctl keyword general:gaps_out 10
-  hyprctl keyword general:gaps_in 5
-  notify-send "󰍹    5px inner gaps" "      10px outer gaps" -t "$ms"
-elif [[ $gaps == "10" ]]; then
-  hyprctl keyword general:gaps_out 8
-  hyprctl keyword general:gaps_in 4
-  notify-send "󰍹    4px inner gaps" "      8px outer gaps" -t "$ms"
-elif [[ $gaps == "8" ]]; then
-  hyprctl keyword general:gaps_out 6
-  hyprctl keyword general:gaps_in 3
-  notify-send "󰍹    3px inner gaps" "      6px outer gaps" -t "$ms"
-elif [[ $gaps == "6" ]]; then
-  hyprctl keyword general:gaps_out 4
-  hyprctl keyword general:gaps_in 2
-  notify-send "󰍹    2px inner gaps" "      4px outer gaps" -t "$ms"
-else
-  hyprctl keyword general:gaps_out 0
-  hyprctl keyword general:gaps_in 0
-  notify-send "󰍹    0px inner gaps" "      0px outer gaps" -t "$ms"
-fi
+hyprctl eval "package.path = [[${root_dir}/?.lua;]] .. package.path; package.loaded['hypr.actions'] = nil; require('hypr.actions').cycle_gaps()"

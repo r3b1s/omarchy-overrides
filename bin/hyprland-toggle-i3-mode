@@ -1,31 +1,7 @@
 #!/usr/bin/env sh
-HYPRGAMEMODE=$(hyprctl getoption animations:enabled | awk 'NR==1{print $2}')
-if [ "$HYPRGAMEMODE" = 1 ] ; then
-    hyprctl --batch "\
-        keyword animations:enabled 0;\
-        keyword animation borderangle,0; \
-        keyword decoration:shadow:enabled 0;\
-        keyword decoration:blur:enabled 0;\
-        keyword decoration:blur:special false;\
-	      keyword decoration:fullscreen_opacity 1.0;\
-	      keyword decoration:inactive_opacity 1.0;\
-	      keyword decoration:active_opacity 1.0;\
-	      keyword decoration:opacity ;\
-        keyword general:gaps_out 10;\
-        keyword general:gaps_in 5;\
-        keyword general:border_size 6;\
-        keyword decoration:rounding 0;\
-        keyword decoration:dim_special 1"
-    
-    hyprctl keyword 'windowrule[opaque]:enable true'
-    hyprctl keyword 'windowrule[clear]:enable false'
-    hyprctl notify 1 5000 "rgb(40a02b)" "i3 Mode [ON]"
-    exit
-else
-    hyprctl notify 1 5000 "rgb(d20f39)" "i3 Mode [OFF]"
-    hyprctl reload
-    # hyprctl keyword 'windowrule[opaque]:enable false'
-    # hyprctl keyword 'windowrule[clear]:enable true'
-    exit 0
-fi
-exit 1
+set -eu
+
+script_path=$(readlink -f -- "$0")
+root_dir=$(dirname -- "$(dirname -- "$script_path")")
+
+hyprctl eval "package.path = [[${root_dir}/?.lua;]] .. package.path; package.loaded['hypr.actions'] = nil; require('hypr.actions').toggle_i3_mode()"

@@ -1,38 +1,15 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
+set -eu
 
-# Get the active monitor (the one with the cursor)
-MONITOR_INFO=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true)')
-ACTIVE_MONITOR=$(echo "$MONITOR_INFO" | jq -r '.name')
-CURRENT_SCALE=$(echo "$MONITOR_INFO" | jq -r '.scale')
+case "${1:-}" in
+  in|out) ;;
+  *)
+    notify-send "󰍹    Error: zoom value not specified"
+    exit 1
+    ;;
+esac
 
-CURRENT_INT=$(awk -v s="$CURRENT_SCALE" 'BEGIN { printf "%.0f", s * 10 }')
+script_path=$(readlink -f -- "$0")
+root_dir=$(dirname -- "$(dirname -- "$script_path")")
 
-if [[ "$1" == "in" ]]; then
-  case "$CURRENT_INT" in
-  6) NEW_SCALE=0.8 ;;
-  8) NEW_SCALE=1 ;;
-  10) NEW_SCALE=1.2 ;;
-  12) NEW_SCALE=1.5 ;;
-  16) NEW_SCALE=2 ;;
-  20) NEW_SCALE=3 ;;
-  *) NEW_SCALE=0.8 ;;
-  esac
-elif [[ "$1" == "out" ]]; then
-  case "$CURRENT_INT" in
-  40) NEW_SCALE=3 ;;
-  30) NEW_SCALE=2 ;;
-  20) NEW_SCALE=1.5 ;;
-  15) NEW_SCALE=1.2 ;;
-  12) NEW_SCALE=1 ;;
-  10) NEW_SCALE=0.8 ;;
-  *) NEW_SCALE=3 ;;
-  esac
-else
-  notify-send "󰍹    Error: zoom value not specificed"
-  exit 1
-fi
-
-hyprctl keyword misc:disable_scale_notification true
-hyprctl keyword monitor "$ACTIVE_MONITOR,preferred,auto,$NEW_SCALE"
-hyprctl keyword misc:disable_scale_notification false
-notify-send "󰍹    Display scaling set to ${NEW_SCALE}x"
+hyprctl eval "package.path = [[${root_dir}/?.lua;]] .. package.path; package.loaded['hypr.actions'] = nil; require('hypr.actions').scale_monitor([[$1]])"

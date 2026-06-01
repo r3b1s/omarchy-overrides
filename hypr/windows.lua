@@ -1,6 +1,12 @@
 -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 -- Omarchy's default.hypr.windows already loads default.hypr.apps.
 
+local window_rules = rawget(_G, "__omarchy_overrides_window_rules")
+if type(window_rules) ~= "table" then
+  window_rules = {}
+  _G.__omarchy_overrides_window_rules = window_rules
+end
+
 hl.window_rule({
   match = { class = "(blueberry.py|Impala|nmtui|Wiremix|org.gnome.NautilusPreviewer|com.gabm.satty|Omarchy|About|TUI.float)" },
   tag = "+floating-window",
@@ -8,13 +14,13 @@ hl.window_rule({
 
 hl.window_rule({ match = { tag = "OPAQUE" }, opacity = "1.0 override 1.0 override" })
 
-hl.window_rule({
+window_rules.opaque = hl.window_rule({
   name = "opaque",
   match = { class = ".*" },
   tag = "+OPAQUE",
 })
 
-hl.window_rule({
+window_rules.clear = hl.window_rule({
   name = "clear",
   match = { class = ".*" },
   tag = "-OPAQUE",

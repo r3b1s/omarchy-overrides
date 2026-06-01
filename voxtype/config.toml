@@ -175,6 +175,8 @@ filler_words = ["uh", "um", "er", "ah", "eh", "hmm", "hm", "mm", "mhm"]
 "technidium" = "technitium"
 "iavailability" = "high availability"
 "proxomox" = "proxmox"
+"cloud code" = "claude code"
+"Cloud Code" = "claude code"
 
 # Non-standard Punctuation
 # "TAC" = "-"
