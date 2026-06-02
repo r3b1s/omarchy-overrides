@@ -1,0 +1,253 @@
+#!/bin/bash
+# omarchy:summary=Apply a Neowall entry from a manifest JSON file or direct image path
+# omarchy:args=<entry-json-path|image-path>
+
+set -euo pipefail
+
+DOTS="${HOME}/.local/share/omarchy-overrides"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy-overrides"
+STATE_FILE="$STATE_DIR/wallpaper-backend"
+NEOWALL_CONFIG="${HOME}/.config/neowall/config.vibe"
+CURRENT_BACKGROUND_LINK="${HOME}/.config/omarchy/current/background"
+
+usage() {
+  echo "Usage: $0 <entry-json-path|image-path>" >&2
+  echo "       $0 --from-preview <preview-path>  # auto-detect entry from preview path" >&2
+  exit 1
+}
+
+build_catalog() {
+  # Collect all preset JSON entries from repo
+  if [[ -d "$DOTS/neowall/presets" ]]; then
+    for f in "$DOTS/neowall/presets"/*.json; do
+      [[ -f "$f" ]] || continue
+      local preview
+      local id
+      id=$(jq -r '.id // empty' "$f")
+      preview="$DOTS/neowall/previews/${id}.png"
+      if [[ -f "$preview" ]]; then
+        echo "$preview|json:$f"
+      fi
+    done
+  fi
+}
+
+resolve_from_preview() {
+  local preview_path="$1"
+  # Resolve absolute path
+  preview_path="$(realpath "$preview_path" 2>/dev/null || echo "$preview_path")"
+
+  # Check preset entries
+  if [[ -d "$DOTS/neowall/presets" ]]; then
+    for f in "$DOTS/neowall/presets"/*.json; do
+      [[ -f "$f" ]] || continue
+      local id
+      id=$(jq -r '.id // empty' "$f")
+      local expected="$DOTS/neowall/previews/${id}.png"
+      if [[ "$(realpath "$expected" 2>/dev/null)" == "$preview_path" ]]; then
+        echo "$f"
+        return 0
+      fi
+    done
+  fi
+
+  # Check if preview matches a bundled Neowall shader (no preset JSON)
+  local preview_basename
+  preview_basename="$(basename "$preview_path" .png)"
+  local user_shaders="${HOME}/.config/neowall/shaders"
+  if [[ -d "$user_shaders" ]]; then
+    local shader_file="${user_shaders}/${preview_basename}.glsl"
+    if [[ -f "$shader_file" ]]; then
+      echo "shader:${preview_basename}.glsl"
+      return 0
+    fi
+  fi
+
+  # Not a preset or shader — treat as raw image
+  echo "raw:$preview_path"
+  return 0
+}
+
+write_neowall_config() {
+  local entry_type="$1"
+  local source_path="$2"
+
+  mkdir -p "$(dirname "$NEOWALL_CONFIG")"
+
+  if [[ "$entry_type" == "shader" ]]; then
+    # source is a shader filename — neowall resolves via ~/.config/neowall/shaders/
+    cat > "$NEOWALL_CONFIG" <<-EOF
+default {
+  shader ${source_path}
+  shader_speed 1.0
+  pause_on_fullscreen false
+  pause_coverage_threshold 1.0
+}
+EOF
+  elif [[ "$entry_type" == "image" ]]; then
+    cat > "$NEOWALL_CONFIG" <<-EOF
+default {
+  path ${source_path}
+  mode fill
+  pause_on_fullscreen false
+  pause_coverage_threshold 1.0
+}
+EOF
+  else
+    echo "Unknown entry type: $entry_type" >&2
+    return 1
+  fi
+}
+
+stop_swaybg() {
+  if pgrep -x swaybg >/dev/null 2>&1; then
+    pkill -x swaybg
+  fi
+}
+
+stop_neowall() {
+  if command -v neowall >/dev/null 2>&1 && pgrep -x neowall >/dev/null 2>&1; then
+    neowall kill 2>/dev/null || pkill -x neowall
+  fi
+}
+
+start_neowall() {
+  # Ensure the daemon is not already running
+  stop_neowall
+  setsid uwsm-app -- neowall >/dev/null 2>&1 &
+}
+
+set_backend_state() {
+  mkdir -p "$STATE_DIR"
+  echo "$1" > "$STATE_FILE"
+}
+
+apply_image_from_json() {
+  local entry_file="$1"
+
+  if [[ ! -f "$entry_file" ]]; then
+    echo "Entry file not found: $entry_file" >&2
+    return 1
+  fi
+
+  local entry_type id source
+  entry_type=$(jq -r '.type // "image"' "$entry_file")
+  id=$(jq -r '.id // empty' "$entry_file")
+  source=$(jq -r '.source // empty' "$entry_file")
+
+  if [[ -z "$id" ]]; then
+    echo "Entry missing 'id'" >&2
+    return 1
+  fi
+
+  # Determine poster for background symlink
+  local poster="$DOTS/neowall/posters/${id}.png"
+  if [[ ! -f "$poster" ]]; then
+    # Fall back to preview as poster
+    poster="$DOTS/neowall/previews/${id}.png"
+  fi
+
+  # For shader type, source is shader filename, we need to make sure it's available
+  local resolved_source
+  if [[ "$entry_type" == "shader" ]]; then
+    # Ensure the shader is symlinked into ~/.config/neowall/shaders/
+    local shader_src="$DOTS/neowall/shaders/${source}"
+    local shader_dst="${HOME}/.config/neowall/shaders/${source}"
+    if [[ -f "$shader_src" ]]; then
+      mkdir -p "$(dirname "$shader_dst")"
+      ln -sf "$shader_src" "$shader_dst"
+    fi
+    resolved_source="$source"
+  else
+    resolved_source="$source"
+  fi
+
+  # Write neowall config
+  write_neowall_config "$entry_type" "$resolved_source"
+
+  # Update Omarchy background symlink to poster
+  if [[ -f "$poster" ]]; then
+    ln -snf "$poster" "$CURRENT_BACKGROUND_LINK"
+  elif [[ "$entry_type" == "image" && -f "$resolved_source" ]]; then
+    ln -snf "$resolved_source" "$CURRENT_BACKGROUND_LINK"
+  fi
+
+  # Kill swaybg, start neowall
+  stop_swaybg
+  set_backend_state "neowall"
+  start_neowall
+}
+
+apply_raw_image() {
+  local image_path="$1"
+
+  if [[ ! -f "$image_path" ]]; then
+    echo "Image not found: $image_path" >&2
+    return 1
+  fi
+
+  # Write neowall config with image
+  write_neowall_config "image" "$image_path"
+
+  # Update Omarchy background symlink
+  ln -snf "$image_path" "$CURRENT_BACKGROUND_LINK"
+
+  # Kill swaybg, start neowall
+  stop_swaybg
+  set_backend_state "neowall"
+  start_neowall
+}
+
+apply_bundled_shader() {
+  local shader_filename="$1"
+  local preview_basename="${shader_filename%.glsl}"
+  local user_shaders="${HOME}/.config/neowall/shaders"
+  local shader_path="${user_shaders}/${shader_filename}"
+
+  if [[ ! -f "$shader_path" ]]; then
+    echo "Shader not found: $shader_path" >&2
+    return 1
+  fi
+
+  # Write neowall config referencing the shader by filename
+  write_neowall_config "shader" "$shader_filename"
+
+  # Update Omarchy background symlink — use bundled poster if available
+  local poster="$DOTS/neowall/posters/${preview_basename}.png"
+  if [[ ! -f "$poster" ]]; then
+    poster="${HOME}/.config/neowall/previews/${preview_basename}.png"
+  fi
+  if [[ -f "$poster" ]]; then
+    ln -snf "$poster" "$CURRENT_BACKGROUND_LINK"
+  fi
+
+  # Kill swaybg, start neowall
+  stop_swaybg
+  set_backend_state "neowall"
+  start_neowall
+}
+
+# Main entry point
+if [[ "${1:-}" == "--from-preview" ]]; then
+  if [[ -z "${2:-}" ]]; then
+    usage
+  fi
+  result=$(resolve_from_preview "$2")
+  if [[ "$result" == raw:* ]]; then
+    apply_raw_image "${result#raw:}"
+  elif [[ "$result" == shader:* ]]; then
+    apply_bundled_shader "${result#shader:}"
+  else
+    apply_image_from_json "$result"
+  fi
+elif [[ -f "${1:-}" ]]; then
+  # Check if it's a JSON manifest
+  if [[ "$1" == *.json ]]; then
+    apply_image_from_json "$1"
+  else
+    # Treat as direct image path
+    apply_raw_image "$1"
+  fi
+else
+  usage
+fi

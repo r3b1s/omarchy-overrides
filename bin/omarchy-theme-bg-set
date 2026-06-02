@@ -1,0 +1,43 @@
+#!/bin/bash
+# omarchy:summary=Set the current background image (overridden — restores swaybg backend)
+# omarchy:args=<path-to-image>
+
+# This shadows the upstream omarchy-theme-bg-set to ensure that any Omarchy
+# static wallpaper selection restores the swaybg backend and kills neowall if active.
+# All normal Omarchy flows (SUPER+CTRL+SPACE, theme bg set, theme bg next,
+# theme set) route through this script via PATH precedence.
+
+set -euo pipefail
+
+OMARCHY_BG_SET="${OMARCHY_PATH:-$HOME/.local/share/omarchy}/bin/omarchy-theme-bg-set"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy-overrides"
+STATE_FILE="$STATE_DIR/wallpaper-backend"
+CURRENT_BACKGROUND_LINK="$HOME/.config/omarchy/current/background"
+
+if [[ -z "${1:-}" ]]; then
+  echo "Usage: $0 <path-to-image>" >&2
+  exit 1
+fi
+
+BACKGROUND="$(realpath "$1")"
+
+if [[ ! -f "$BACKGROUND" ]]; then
+  echo "File does not exist: $BACKGROUND" >&2
+  exit 1
+fi
+
+# If neowall is active, kill it first
+if command -v neowall >/dev/null 2>&1 && pgrep -x neowall >/dev/null 2>&1; then
+  neowall kill 2>/dev/null || pkill -x neowall
+fi
+
+# Update state to swaybg
+mkdir -p "$STATE_DIR"
+echo "swaybg" > "$STATE_FILE"
+
+# Create symlink
+ln -nsf "$BACKGROUND" "$CURRENT_BACKGROUND_LINK"
+
+# Kill existing swaybg and start new one
+pkill -x swaybg 2>/dev/null || true
+setsid uwsm-app -- swaybg -i "$CURRENT_BACKGROUND_LINK" -m fill >/dev/null 2>&1 &

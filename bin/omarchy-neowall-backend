@@ -1,0 +1,48 @@
+#!/bin/bash
+# omarchy:summary=Read or write the active wallpaper backend state
+# omarchy:args=<read|write <swaybg|neowall>|status>
+# omarchy:examples=omarchy neowall backend read | omarchy neowall backend write neowall
+
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy-overrides"
+STATE_FILE="$STATE_DIR/wallpaper-backend"
+
+case "${1:-read}" in
+  read)
+    if [[ -f "$STATE_FILE" ]]; then
+      cat "$STATE_FILE"
+    else
+      echo "swaybg"
+    fi
+    ;;
+  write)
+    if [[ "$2" != "swaybg" && "$2" != "neowall" ]]; then
+      echo "Usage: $0 write <swaybg|neowall>" >&2
+      exit 1
+    fi
+    mkdir -p "$STATE_DIR"
+    echo "$2" > "$STATE_FILE"
+    ;;
+  status)
+    local state
+    if [[ -f "$STATE_FILE" ]]; then
+      state=$(cat "$STATE_FILE")
+    else
+      state="swaybg"
+    fi
+    echo "Backend: $state"
+    if pgrep -x swaybg >/dev/null 2>&1; then
+      echo "swaybg: running"
+    else
+      echo "swaybg: stopped"
+    fi
+    if command -v neowall >/dev/null 2>&1 && pgrep -x neowall >/dev/null 2>&1; then
+      echo "neowall: running"
+    else
+      echo "neowall: stopped"
+    fi
+    ;;
+  *)
+    echo "Usage: $0 <read|write <backend>|status>" >&2
+    exit 1
+    ;;
+esac
