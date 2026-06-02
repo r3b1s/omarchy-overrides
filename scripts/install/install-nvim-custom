@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
+SRC="$DOTS/nvim-custom"
+TARGET="$USER_HOME/.config/nvim-custom"
+
+if [[ ! -d "$SRC" ]]; then
+  echo "Missing source config: $SRC" >&2
+  exit 1
+fi
+
+if [[ -d "$TARGET" ]]; then
+  if ! gum confirm "Existing $TARGET found. Overwrite it?"; then
+    echo "Aborted."
+    exit 0
+  fi
+  rm -rf "$TARGET"
+fi
+
+echo "Installing nvim-custom to $TARGET"
+mkdir -p "$TARGET"
+cp -R "$SRC"/. "$TARGET"/
+
+echo "Done. Run with: vim"
