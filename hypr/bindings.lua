@@ -491,6 +491,21 @@ exec("SUPER + SHIFT + CTRL + ALT + Backspace", bin .. "/hyprland-window-round-to
 -- ##########################
 
 -- ##########################
+-- ####### Wallpapers #######
+-- ###                    ###
+
+-- Neowall native selector: SUPER+CTRL+ALT+SPACE
+unbindAll({
+  "SUPER + CTRL + ALT + space",
+  "SUPER + CTRL + ALT + " .. key.space,
+})
+exec("SUPER + CTRL + ALT + Space", bin .. "/omarchy-neowall-select", "Neowall shader/wallpaper selector")
+
+-- ###                    ###
+-- ####### Wallpapers #######
+-- ##########################
+
+-- ##########################
 -- ##### Screen Capture #####
 -- ###                    ###
 
