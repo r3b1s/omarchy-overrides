@@ -84,6 +84,10 @@ install_zellij() {
   $SCRIPTS/install/install-zellij
 }
 
+install_neowall() {
+  gum spin --spinner "$SPINNER_EMPHASIS" --title "Installing Neowall from GitHub releases..." -- $SCRIPTS/install/install-neowall
+}
+
 ###                        ###
 ######### Functions ##########
 ##############################
@@ -114,6 +118,7 @@ items=$(gum choose --no-limit --header "Wadya want?" \
   'kanata-enthium' \
   'OpenCode' \
   'Zellij' \
+  'Neowall' \
   'Alternative-Shell')
 
 while IFS= read -r item <&3 ; do
@@ -146,6 +151,10 @@ while IFS= read -r item <&3 ; do
     'Zellij')
       echo -e "\nInstalling Zellij..."
       install_zellij
+      ;;
+    'Neowall')
+      echo -e "\nInstalling Neowall live wallpaper daemon..."
+      install_neowall
       ;;
     'Alternative-Shell')
       echo -e "\nLet's pick ur sh3ll"

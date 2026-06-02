@@ -13,6 +13,18 @@ OMARCHY_BIN="$USER_HOME/.local/share/omarchy/bin"
 $DOTS/scripts/import-backgrounds
 mv -v /tmp/omarchy-theme-sync $OMARCHY_BIN/omarchy-theme-sync
 
+# Re-seed Neowall assets (if installed)
+NEOWALL_SHADERS_DIR="$USER_HOME/.config/neowall/shaders"
+NEOWALL_PREVIEWS_DIR="$USER_HOME/.config/neowall/previews"
+if [[ -d "$NEOWALL_SHADERS_DIR" ]]; then
+  for f in "$DOTS/neowall/shaders"/*.glsl; do
+    [[ -f "$f" ]] || continue
+    ln -sf "$f" "$NEOWALL_SHADERS_DIR/$(basename "$f")"
+  done
+fi
+# Re-seed all preview and poster images (clears old, regenerates fresh)
+bash "$DOTS/neowall/scripts/seed-previews.sh" 2>/dev/null || true
+
 # Reestablish Symbolic Links
 $DOTS/scripts/link-webapp-firefox
 $DOTS/scripts/link-configs link
