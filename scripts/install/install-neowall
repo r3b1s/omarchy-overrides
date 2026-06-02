@@ -1,0 +1,223 @@
+#!/usr/bin/env bash
+# Install, update, or uninstall Neowall from the latest upstream GitHub release.
+#
+# Usage:
+#   install-neowall                    # Fresh install
+#   install-neowall --update           # Update existing install
+#   install-neowall --uninstall        # Remove Neowall and its runtime data
+#   install-neowall --dry-run          # Show what would be installed
+
+set -euo pipefail
+
+REPO="1ay1/neowall"
+RELEASE_URL="https://github.com/${REPO}/releases"
+ARCHIVE_VARIANT="arch"                # Arch Linux glibc variant
+LOCAL_BIN="${HOME}/.local/bin"
+NEOWALL_BIN="${LOCAL_BIN}/neowall"
+NEOWALL_CONFIG_DIR="${HOME}/.config/neowall"
+NEOWALL_SHADERS_DIR="${NEOWALL_CONFIG_DIR}/shaders"
+NEOWALL_PREVIEWS_DIR="${NEOWALL_CONFIG_DIR}/previews"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy-overrides"
+TEMP_DIR=$(mktemp -d /tmp/neowall-install-XXXXXX)
+trap 'rm -rf "$TEMP_DIR"' EXIT
+
+log()  { echo "  >>> $*"; }
+warn() { echo "  [!] $*" >&2; }
+die()  { echo "  [ERROR] $*" >&2; exit 1; }
+
+MODE="install"
+for arg in "$@"; do
+  case "$arg" in
+    --update) MODE="update" ;;
+    --uninstall) MODE="uninstall" ;;
+    --dry-run) MODE="dry-run" ;;
+  esac
+done
+
+if [[ "$MODE" != "install" ]] && [[ "$MODE" != "update" ]] && [[ "$MODE" != "uninstall" ]] && [[ "$MODE" != "dry-run" ]]; then
+  echo "Usage: $0 [--update|--uninstall|--dry-run]"
+  exit 1
+fi
+
+# --- 1. Uninstall mode ---
+if [[ "$MODE" == "uninstall" ]]; then
+  log "Stopping Neowall daemon if running..."
+  if command -v neowall >/dev/null 2>&1; then
+    neowall kill 2>/dev/null || true
+  fi
+  pkill -x neowall 2>/dev/null || true
+
+  log "Removing Neowall binary: ${NEOWALL_BIN}"
+  rm -f "$NEOWALL_BIN"
+
+  if [[ -d "$NEOWALL_CONFIG_DIR" ]]; then
+    log "Removing Neowall runtime config and assets: ${NEOWALL_CONFIG_DIR}"
+    rm -rf "$NEOWALL_CONFIG_DIR"
+  fi
+
+  if [[ -d "$STATE_DIR" ]]; then
+    log "Removing Neowall state file..."
+    rm -f "$STATE_DIR/wallpaper-backend"
+    rmdir "$STATE_DIR" 2>/dev/null || true
+  fi
+
+  log "Restoring swaybg background..."
+  if [[ -f "${HOME}/.config/omarchy/current/background" ]]; then
+    pkill -x swaybg 2>/dev/null || true
+    setsid uwsm-app -- swaybg -i "${HOME}/.config/omarchy/current/background" -m fill >/dev/null 2>&1 &
+  fi
+
+  echo ""
+  log "Neowall uninstalled successfully."
+  log "Restored swaybg for normal Omarchy wallpaper behavior."
+  exit 0
+fi
+
+# --- 2. Check if already installed for update mode ---
+if [[ "$MODE" == "install" ]] && [[ -f "$NEOWALL_BIN" ]]; then
+  warn "Neowall is already installed at ${NEOWALL_BIN}."
+  warn "Run with --update to refresh, or use --uninstall to remove it."
+  exit 1
+fi
+
+# --- 3. Discover latest release tag ---
+log "Discovering latest Neowall release from $REPO..."
+LATEST_TAG=$(curl -sSfL "https://api.github.com/repos/${REPO}/releases/latest" \
+  | grep '"tag_name"' \
+  | head -1 \
+  | sed 's/.*"tag_name": "\(.*\)",.*/\1/') \
+  || die "Failed to discover latest release tag"
+
+log "Latest release: $LATEST_TAG"
+
+# --- 4. Download release assets ---
+ARCHIVE_NAME="neowall-linux-x86_64-${ARCHIVE_VARIANT}.tar.gz"
+ARCHIVE_URL="${RELEASE_URL}/download/${LATEST_TAG}/${ARCHIVE_NAME}"
+SUMS_URL="${RELEASE_URL}/download/${LATEST_TAG}/SHA256SUMS.txt"
+
+cd "$TEMP_DIR"
+
+log "Downloading ${ARCHIVE_NAME}..."
+curl -sSfLO "$ARCHIVE_URL" || die "Failed to download release archive"
+
+log "Downloading SHA256SUMS.txt..."
+curl -sSfLO "$SUMS_URL" || die "Failed to download checksums"
+
+# --- 5. Verify checksum ---
+log "Verifying checksum..."
+if ! sha256sum -c --ignore-missing SHA256SUMS.txt 2>/dev/null; then
+  die "Checksum verification FAILED. Aborting."
+fi
+log "Checksum verified."
+
+# --- 6. Dry run ---
+if [[ "$MODE" == "dry-run" ]]; then
+  echo ""
+  echo "  Dry-run summary:"
+  echo "    Release:  $LATEST_TAG"
+  echo "    Archive:  ${ARCHIVE_NAME}"
+  echo "    Binary:   ${NEOWALL_BIN}"
+  echo "    Config:   ${NEOWALL_CONFIG_DIR}"
+  echo "    Shaders:  ${NEOWALL_SHADERS_DIR}"
+  echo "  No changes made."
+  exit 0
+fi
+
+# --- 7. Create runtime directories ---
+mkdir -p "$LOCAL_BIN" "$NEOWALL_CONFIG_DIR" "$NEOWALL_SHADERS_DIR" \
+         "$STATE_DIR" "$NEOWALL_PREVIEWS_DIR"
+
+# --- 8. Extract and install binary ---
+log "Extracting archive..."
+tar -xzf "$ARCHIVE_NAME" || die "Failed to extract archive"
+
+if [[ -f neowall ]]; then
+  log "Installing neowall binary to ${NEOWALL_BIN}..."
+  install -m755 neowall "$NEOWALL_BIN"
+else
+  # Try nested directory (some tarballs include a top-level dir)
+  if [[ -f "neowall/neowall" ]]; then
+    log "Installing neowall binary (nested) to ${NEOWALL_BIN}..."
+    install -m755 neowall/neowall "$NEOWALL_BIN"
+  else
+    die "Could not find neowall binary in the extracted archive."
+  fi
+fi
+
+# --- 9. Seed shaders ---
+# The binary release tarball does not include shaders, so download the source
+# tarball and extract from examples/shaders/.
+log "Binary release has no bundled shaders — downloading source tarball..."
+SOURCE_ARCHIVE="neowall-${LATEST_TAG#v}-source.tar.gz"
+SOURCE_URL="${RELEASE_URL}/download/${LATEST_TAG}/${SOURCE_ARCHIVE}"
+curl -sSfLO "$SOURCE_URL" || warn "Could not fetch source tarball for shaders"
+if [[ -f "$SOURCE_ARCHIVE" ]]; then
+  tar -xzf "$SOURCE_ARCHIVE" 2>/dev/null || true
+  src_dir="neowall-${LATEST_TAG#v}"
+  # Shaders live under examples/shaders/ in the source tarball
+  if [[ -d "${src_dir}/examples/shaders" ]]; then
+    log "Installing shaders from source tarball (examples/shaders/)..."
+    for f in "${src_dir}/examples/shaders"/*.glsl; do
+      [[ -f "$f" ]] && cp -n "$f" "$NEOWALL_SHADERS_DIR/"
+    done
+    shader_count=$(ls "${NEOWALL_SHADERS_DIR}"/*.glsl 2>/dev/null | wc -l)
+    log "Installed ${shader_count} shaders"
+  else
+    # Fallback: try shaders/ directly
+    if [[ -d "${src_dir}/shaders" ]]; then
+      log "Installing shaders from source tarball (shaders/)..."
+      for f in "${src_dir}/shaders"/*.glsl; do
+        [[ -f "$f" ]] && cp -n "$f" "$NEOWALL_SHADERS_DIR/"
+      done
+    fi
+  fi
+  rm -rf "${src_dir}" 2>/dev/null || true
+fi
+
+# --- 10. Link repo-managed shaders ON TOP of installed shaders ---
+DOTS="${HOME}/.local/share/omarchy-overrides"
+if [[ -d "$DOTS/neowall/shaders" ]]; then
+  log "Linking repo-managed shaders..."
+  for f in "$DOTS/neowall/shaders"/*.glsl; do
+    [[ -f "$f" ]] || continue
+    ln -sf "$f" "${NEOWALL_SHADERS_DIR}/$(basename "$f")"
+  done
+fi
+
+# --- 11. Create default config if none exists ---
+if [[ ! -f "${NEOWALL_CONFIG_DIR}/config.vibe" ]]; then
+  log "Creating default Neowall config..."
+  cat > "${NEOWALL_CONFIG_DIR}/config.vibe" <<-EOF
+# Keep animations running even when windows cover the wallpaper
+pause_on_fullscreen false
+pause_coverage_threshold 1.0
+
+default {
+  shader matrix_rain.glsl
+  shader_speed 1.0
+}
+EOF
+fi
+
+# --- 12. Ensure repo-managed previews are linked into user config ---
+DOTS="${HOME}/.local/share/omarchy-overrides"
+if [[ -d "$DOTS/neowall/previews" ]]; then
+  log "Linking repo-managed previews..."
+  for f in "$DOTS/neowall/previews"/*.png; do
+    [[ -f "$f" ]] || continue
+    ln -sf "$f" "${NEOWALL_PREVIEWS_DIR}/$(basename "$f")"
+  done
+fi
+
+# --- 13. Seed preview and poster images ---
+log "Seeding Neowall preview and poster images..."
+bash "${DOTS}/neowall/scripts/seed-previews.sh"
+
+echo ""
+log "Neowall ${LATEST_TAG} installed successfully!"
+log "Binary:    ${NEOWALL_BIN}"
+log "Config:    ${NEOWALL_CONFIG_DIR}/config.vibe"
+log "Shaders:   ${NEOWALL_SHADERS_DIR}"
+log "Previews:  ${NEOWALL_PREVIEWS_DIR}"
+log ""
+log "Run 'neowall' to start, or use the Neowall selector via SUPER+CTRL+ALT+SPACE."
