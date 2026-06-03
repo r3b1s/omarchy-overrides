@@ -496,8 +496,8 @@ exec("SUPER + SHIFT + CTRL + ALT + Backspace", bin .. "/hyprland-window-round-to
 
 -- Neowall native selector: SUPER+CTRL+ALT+SPACE
 unbindAll({
-  "SUPER + CTRL + ALT + space",
-  "SUPER + CTRL + ALT + " .. key.space,
+	"SUPER + CTRL + ALT + space",
+	"SUPER + CTRL + ALT + " .. key.space,
 })
 exec("SUPER + CTRL + ALT + Space", bin .. "/omarchy-neowall-select", "Neowall shader/wallpaper selector")
 
@@ -1008,7 +1008,7 @@ scratchpad(
 		.. launchWebapp
 		.. ' "https://claude.ai"; '
 		.. launchWebapp
-		.. ' "https://perplexity.ai"',
+		.. ' "https://google.com"',
 	{
 		layout = "master",
 		layout_opts = { orientation = "center" },
