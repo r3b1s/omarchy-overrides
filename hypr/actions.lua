@@ -262,6 +262,19 @@ function M.scale_monitor(direction)
 	notify(string.format("Display scaling (%s): %.1fx", monitor.name, next_scale), "rgb(89b4fa)")
 end
 
+-- Set waybar opacity and reload to match the i3 mode toggle state.
+local function set_waybar_opacity(value)
+	local home = os.getenv("HOME")
+	local path = home .. "/.config/waybar/opacity.css"
+	local content = "/* Managed by i3 mode toggle */\nwindow#waybar {\n  opacity: " .. value .. ";\n}\n"
+	local f = io.open(path, "w")
+	if f then
+		f:write(content)
+		f:close()
+		os.execute("pkill -SIGUSR2 waybar")
+	end
+end
+
 function M.toggle_i3_mode()
 	local i3_mode = state.i3_mode
 
@@ -307,6 +320,7 @@ function M.toggle_i3_mode()
 		})
 
 		set_i3_rules(true)
+		set_waybar_opacity(1.0)
 		i3_mode.active = true
 		notify("i3 Mode [ON]", "rgb(40a02b)", "ok")
 		return
@@ -339,6 +353,7 @@ function M.toggle_i3_mode()
 	})
 
 	set_i3_rules(false)
+	set_waybar_opacity(0.93)
 	i3_mode.snapshot = nil
 	i3_mode.active = false
 	notify("i3 Mode [OFF]", "rgb(d20f39)", "warning")
