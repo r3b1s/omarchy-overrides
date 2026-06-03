@@ -17,3 +17,5 @@ alias kc="kilo --continue"
 
 # opencode
 alias oc="opencode --continue"
+
+alias pc="pi --resume"
