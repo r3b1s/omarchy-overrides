@@ -1,3 +1,6 @@
+# Source tmux layout functions
+source "$HOME/.local/share/omarchy-overrides/shell/tmux_fns"
+
 # Generic helper for accessing containerized CLIs
 _container_cmd() {
     local container="$1"
