@@ -38,9 +38,8 @@ elif [[ -e "$TARGET" ]]; then
   exit 1
 fi
 
-# --- create parent & symlink ---
+# --- create symlink ---
 
-mkdir -p "$(dirname "$TARGET")"
 ln -s "$REPO_ROOT" "$TARGET"
 
 echo "linked: $TARGET → $REPO_ROOT"
