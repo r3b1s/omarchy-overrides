@@ -2,6 +2,10 @@ local M = {}
 
 local schema_dir = vim.fn.stdpath("config") .. "/schemas"
 
+local function has_executable(cmd)
+  return vim.fn.executable(cmd) == 1
+end
+
 local servers = {
   ansiblels = {
     settings = {
@@ -176,6 +180,21 @@ local servers = {
 
 function M.server_names()
   return vim.tbl_keys(servers)
+end
+
+function M.mason_server_names()
+  local names = {}
+
+  for _, name in ipairs(M.server_names()) do
+    if name == "java_language_server" and not has_executable("jlink") then
+      goto continue
+    end
+
+    names[#names + 1] = name
+    ::continue::
+  end
+
+  return names
 end
 
 function M.setup()

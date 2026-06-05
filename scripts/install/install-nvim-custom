@@ -5,6 +5,23 @@ USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
 DOTS="$USER_HOME/.local/share/omarchy-overrides"
 SRC="$DOTS/nvim-custom"
 TARGET="$USER_HOME/.config/nvim-custom"
+OMARCHY_NVIM_CONFIG="/usr/share/omarchy-nvim/config"
+OMARCHY_THEME="$USER_HOME/.config/omarchy/current/theme/neovim.lua"
+
+copy_omarchy_theme_files() {
+  if [[ ! -d "$OMARCHY_NVIM_CONFIG" ]]; then
+    echo "Skipping Omarchy theme files; missing $OMARCHY_NVIM_CONFIG" >&2
+    return 0
+  fi
+
+  mkdir -p "$TARGET/lua/plugins" "$TARGET/plugin/after"
+
+  cp "$OMARCHY_NVIM_CONFIG/lua/plugins/all-themes.lua" "$TARGET/lua/plugins/all-themes.lua"
+  cp "$OMARCHY_NVIM_CONFIG/lua/plugins/omarchy-theme-hotreload.lua" "$TARGET/lua/plugins/omarchy-theme-hotreload.lua"
+  cp "$OMARCHY_NVIM_CONFIG/plugin/after/transparency.lua" "$TARGET/plugin/after/transparency.lua"
+
+  ln -snf "$OMARCHY_THEME" "$TARGET/lua/plugins/theme.lua"
+}
 
 if [[ ! -d "$SRC" ]]; then
   echo "Missing source config: $SRC" >&2
@@ -22,5 +39,10 @@ fi
 echo "Installing nvim-custom to $TARGET"
 mkdir -p "$TARGET"
 cp -R "$SRC"/. "$TARGET"/
+
+echo "Copying Omarchy theme integration"
+copy_omarchy_theme_files
+
+ln -snf "$OMARCHY_THEME" "$TARGET/lua/plugins/theme.lua"
 
 echo "Done. Run with: vim"
