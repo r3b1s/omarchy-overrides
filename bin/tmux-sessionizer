@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 
 PREFIX="$HOME/Dev"
+. "$HOME/.local/share/omarchy-overrides/shell/tmux_fns"
 
-selected=$(find "$PREFIX/personal" "$PREFIX/Personal" "$PREFIX/work" "$PREFIX/Work" "$PREFIX/repos" "$PREFIX/Repos" -mindepth 1 -maxdepth 1 -type d | fzf)
+
+selected=$(find \
+  "$HOME/Repos" \
+  "$PREFIX/personal" \
+  "$PREFIX/Personal" \
+  "$PREFIX/work" \
+  "$PREFIX/Work" \
+  "$PREFIX/repos" \
+  "$PREFIX/Repos" -mindepth 1 -maxdepth 1 -type d | fzf)
 
 if [[ -z $selected ]]; then
     exit 0
@@ -12,12 +21,22 @@ selected_name=$(basename "$selected" | tr . _)
 tmux_running=$(pgrep tmux)
 
 if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-    tmux new-session -s $selected_name -c $selected
+    tmux new-session -ds "$selected_name" -c "$selected"
+    target_pane=$(tmux display-message -p -t "$selected_name:0.0" "#{pane_id}")
+    tvl "$target_pane" "$selected"
+    tmux attach-session -t "$selected_name"
     exit 0
 fi
 
-if ! tmux has-session -t=$selected_name 2>/dev/null; then
-    tmux new-session -ds $selected_name -c $selected
+created_session=false
+if ! tmux has-session -t="$selected_name" 2>/dev/null; then
+    tmux new-session -ds "$selected_name" -c "$selected"
+    created_session=true
 fi
 
-tmux switch-client -t $selected_name
+if [[ "$created_session" == true ]]; then
+    target_pane=$(tmux display-message -p -t "$selected_name:0.0" "#{pane_id}")
+    tvl "$target_pane" "$selected"
+fi
+
+tmux switch-client -t "$selected_name"

@@ -2,18 +2,19 @@
 # Source this in your shell config: source ~/.local/share/omarchy-overrides/tmux/tmux_fns
 #
 # Create 3 vertical panes with roughly equal width (33/34/33)
-# Usage: tvl
+# Usage: tvl [target-pane] [directory]
 tvl() {
-  [[ -z $TMUX ]] && { echo "You must start tmux to use tvl."; return 1; }
+  local target="${1:-$TMUX_PANE}"
+  local current_dir="${2:-$PWD}"
 
-  local current_dir="${PWD}"
+  [[ -z $target ]] && { echo "You must start tmux to use tvl."; return 1; }
 
-  tmux rename-window -t "$TMUX_PANE" "$(basename "$current_dir")"
+  tmux rename-window -t "$target" "$(basename "$current_dir")"
 
   # Create two additional vertical panes
-  tmux split-window -h -t "$TMUX_PANE" -c "$current_dir"
-  tmux split-window -h -t "$TMUX_PANE" -c "$current_dir"
+  tmux split-window -h -t "$target" -c "$current_dir"
+  tmux split-window -h -t "$target" -c "$current_dir"
 
   # Even out all pane widths using the even-horizontal layout
-  tmux select-layout -t "$TMUX_PANE" even-horizontal
+  tmux select-layout -t "$target" even-horizontal
 }
