@@ -1,17 +1,35 @@
 #!/usr/bin/env bash
 
-PREFIX="$HOME/Dev"
+PREFIX0="$HOME/Local"
+PREFIX1="$HOME/Dev"
 . "$HOME/.local/share/omarchy-overrides/shell/tmux_fns"
 
 
 selected=$(find \
+  "$HOME/personal" \
+  "$HOME/Personal" \
+  "$HOME/work" \
+  "$HOME/Work" \
+  "$HOME/repos" \
   "$HOME/Repos" \
-  "$PREFIX/personal" \
-  "$PREFIX/Personal" \
-  "$PREFIX/work" \
-  "$PREFIX/Work" \
-  "$PREFIX/repos" \
-  "$PREFIX/Repos" -mindepth 1 -maxdepth 1 -type d | fzf)
+  "$HOME/other" \
+  "$HOME/Other" \
+  "$PREFIX0/personal" \
+  "$PREFIX0/Personal" \
+  "$PREFIX0/work" \
+  "$PREFIX0/Work" \
+  "$PREFIX0/repos" \
+  "$PREFIX0/Repos" \
+  "$PREFIX0/other" \
+  "$PREFIX0/Other" \
+  "$PREFIX1/personal" \
+  "$PREFIX1/Personal" \
+  "$PREFIX1/work" \
+  "$PREFIX1/Work" \
+  "$PREFIX1/repos" \
+  "$PREFIX1/Repos" \
+  "$PREFIX1/other" \
+  "$PREFIX1/Other" -mindepth 1 -maxdepth 1 -type d | fzf)
 
 if [[ -z $selected ]]; then
     exit 0

@@ -10,7 +10,7 @@ Base Neovim override set for the default `nvim` profile.
 ## Layout
 - `lua/config/keymaps.lua` - custom keymaps.
 - `lua/config/options.lua` - custom editor options.
-- `lua/plugins/` - plugin override files for completion, LSP, Mason, Ansible, bullets, and Harpoon.
+- `lua/plugins/` - plugin override files for completion, LSP, Mason, Ansible, bullets, Harpoon, Yazi, Oil, and UI overrides.
 
 ## Install / run
 - Install with: `scripts/install/install-nvim`
