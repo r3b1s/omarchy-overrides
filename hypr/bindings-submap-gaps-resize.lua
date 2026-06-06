@@ -5,7 +5,22 @@
 --   k: increase top+bottom gaps  |  j: decrease top+bottom gaps
 --   Esc: exit submap
 
-local STEP = 10
+-- Dynamic step: same screen-percentage factor (5.5%) as hypr/scripts/delta-resize.
+local FACTOR = 0.055
+
+local function get_step_x()
+	local handle = io.popen("hyprctl monitors -j | jq -r '.[] | select(.focused).width'")
+	local w = tonumber(handle:read("*a")) or 1920
+	handle:close()
+	return math.max(1, math.floor(w * FACTOR))
+end
+
+local function get_step_y()
+	local handle = io.popen("hyprctl monitors -j | jq -r '.[] | select(.focused).height'")
+	local h = tonumber(handle:read("*a")) or 1080
+	handle:close()
+	return math.max(1, math.floor(h * FACTOR))
+end
 
 local submapNotify = 'notify-send "Gaps Resize [ON]" "h/l: sides  |  j/k: top/bottom  |  Esc: exit"'
 
@@ -45,30 +60,34 @@ end
 
 hl.define_submap("gaps-resize", function()
 	hl.bind("l", function()
+		local s = get_step_x()
 		local g = norm(hl.get_config("general.gaps_out"))
-		g.left = clamp(g.left + STEP)
-		g.right = clamp(g.right + STEP)
+		g.left = clamp(g.left + s)
+		g.right = clamp(g.right + s)
 		hl.config({ general = { gaps_out = pack(g) } })
 	end)
 
 	hl.bind("h", function()
+		local s = get_step_x()
 		local g = norm(hl.get_config("general.gaps_out"))
-		g.left = clamp(g.left - STEP)
-		g.right = clamp(g.right - STEP)
+		g.left = clamp(g.left - s)
+		g.right = clamp(g.right - s)
 		hl.config({ general = { gaps_out = pack(g) } })
 	end)
 
 	hl.bind("k", function()
+		local s = get_step_y()
 		local g = norm(hl.get_config("general.gaps_out"))
-		g.top = clamp(g.top + STEP)
-		g.bottom = clamp(g.bottom + STEP)
+		g.top = clamp(g.top + s)
+		g.bottom = clamp(g.bottom + s)
 		hl.config({ general = { gaps_out = pack(g) } })
 	end)
 
 	hl.bind("j", function()
+		local s = get_step_y()
 		local g = norm(hl.get_config("general.gaps_out"))
-		g.top = clamp(g.top - STEP)
-		g.bottom = clamp(g.bottom - STEP)
+		g.top = clamp(g.top - s)
+		g.bottom = clamp(g.bottom - s)
 		hl.config({ general = { gaps_out = pack(g) } })
 	end)
 
