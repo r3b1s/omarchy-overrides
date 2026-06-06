@@ -21,6 +21,14 @@ sync_file() {
   ln -s -v "$src" "$dest" 2>&1 | sed 's/^/    /'
 }
 
+copy_file() {
+  local src="$1"
+  local dest="$2"
+  echo "  $dest"
+  mkdir -p "$(dirname "$dest")"
+  cp -f "$src" "$dest"
+}
+
 section() {
   echo ""
   echo "── $1 ──"
@@ -54,6 +62,9 @@ echo "  Reloading systemd user daemon..."
 systemctl --user daemon-reload && systemctl --user restart syncthing.service || echo "  Warning: daemon-reload failed (systemd user instance may not be running)"
 
 # ── hypr (Lua configs + scripts) ─────────────────────────────────────────────
+
+section "uwsm"
+copy_file "$DOTS/uwsm/env" "$USER_HOME/.config/uwsm/env"
 
 section "hypr (Lua configs)"
 for f in "$DOTS/hypr"/*.lua; do
