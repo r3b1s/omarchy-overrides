@@ -1,8 +1,8 @@
 -- Gaps Resize Submap
 --
--- Enter with SUPER+CTRL+G to adjust gaps_out on specific axes.
---   l: increase left+right gaps  |  h: decrease left+right gaps
---   k: increase top+bottom gaps  |  j: decrease top+bottom gaps
+-- Enter with SUPER+CTRL+G to adjust gaps on specific axes.
+--   h/l: gaps_out (sides)  |  j/k: gaps_out (top/bottom)
+--   arrows: gaps_in (same axes)
 --   Esc: exit submap
 
 -- Screen-percentage step (same 5.5% factor as hypr/scripts/delta-resize).
@@ -20,7 +20,7 @@ local function step_for(axis)
 	return math.max(1, math.floor(mon_dim(axis) * FACTOR))
 end
 
-local submapNotify = 'notify-send "Gaps Resize [ON]" "h/l: sides  |  j/k: top/bottom  |  Esc: exit"'
+local submapNotify = 'notify-send "Gaps Resize [ON]" "h/l: out  |  j/k: out  |  arrows: in  |  Esc: exit"'
 
 -- ── gap helpers ───────────────────────────────────────────────────────────────
 
@@ -87,6 +87,39 @@ hl.define_submap("gaps-resize", function()
 		g.top = clamp(g.top - s)
 		g.bottom = clamp(g.bottom - s)
 		hl.config({ general = { gaps_out = pack(g) } })
+	end)
+
+	-- Arrow keys → gaps_in (same axis pattern, same step)
+	hl.bind("Right", function()
+		local s = step_for("width")
+		local g = norm(hl.get_config("general.gaps_in"))
+		g.left = clamp(g.left + s)
+		g.right = clamp(g.right + s)
+		hl.config({ general = { gaps_in = pack(g) } })
+	end)
+
+	hl.bind("Left", function()
+		local s = step_for("width")
+		local g = norm(hl.get_config("general.gaps_in"))
+		g.left = clamp(g.left - s)
+		g.right = clamp(g.right - s)
+		hl.config({ general = { gaps_in = pack(g) } })
+	end)
+
+	hl.bind("Up", function()
+		local s = step_for("height")
+		local g = norm(hl.get_config("general.gaps_in"))
+		g.top = clamp(g.top + s)
+		g.bottom = clamp(g.bottom + s)
+		hl.config({ general = { gaps_in = pack(g) } })
+	end)
+
+	hl.bind("Down", function()
+		local s = step_for("height")
+		local g = norm(hl.get_config("general.gaps_in"))
+		g.top = clamp(g.top - s)
+		g.bottom = clamp(g.bottom - s)
+		hl.config({ general = { gaps_in = pack(g) } })
 	end)
 
 	hl.bind("Escape", function()
