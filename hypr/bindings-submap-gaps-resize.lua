@@ -1,14 +1,16 @@
 -- Gaps Resize Submap
 --
 -- Enter with SUPER+CTRL+G to adjust gaps on specific axes.
---   h/l: gaps_out (sides)  |  j/k: gaps_out (top/bottom)
---   arrows: gaps_in (same axes)
+--   h/l: gaps_out (sides)  |  j/k: gaps_out (top/bottom)  [5.5% step]
+--   arrows: gaps_in (uniform)  [0.4% step]
 --   Esc: exit submap
 
--- Screen-percentage step (same 5.5% factor as hypr/scripts/delta-resize).
--- Uses hl.* API directly (no subprocess/hyprctl calls) to avoid IPC deadlocks
--- since this runs inside Hyprland's Lua callback context.
-local FACTOR = 0.055
+-- Screen-percentage step factors.
+-- gaps_out: 5.5% (same as hypr/scripts/delta-resize)
+-- gaps_in:  0.4% (inner gaps are smaller, uniform)
+-- Uses hl.* API directly to avoid IPC deadlocks.
+local FACTOR_OUT = 0.055
+local FACTOR_IN  = 0.004
 
 local function mon_dim(axis)
 	local mon = hl.get_active_monitor() or hl.get_monitor_at_cursor()
@@ -16,8 +18,12 @@ local function mon_dim(axis)
 	return dim
 end
 
-local function step_for(axis)
-	return math.max(1, math.floor(mon_dim(axis) * FACTOR))
+local function step_out(axis)
+	return math.max(1, math.floor(mon_dim(axis) * FACTOR_OUT))
+end
+
+local function step_in()
+	return math.max(1, math.floor(mon_dim("width") * FACTOR_IN))
 end
 
 local submapNotify = 'notify-send "Gaps Resize [ON]" "h/l: out  |  j/k: out  |  arrows: in  |  Esc: exit"'
@@ -58,7 +64,7 @@ end
 
 hl.define_submap("gaps-resize", function()
 	hl.bind("l", function()
-		local s = step_for("width")
+		local s = step_out("width")
 		local g = norm(hl.get_config("general.gaps_out"))
 		g.left = clamp(g.left + s)
 		g.right = clamp(g.right + s)
@@ -66,7 +72,7 @@ hl.define_submap("gaps-resize", function()
 	end)
 
 	hl.bind("h", function()
-		local s = step_for("width")
+		local s = step_out("width")
 		local g = norm(hl.get_config("general.gaps_out"))
 		g.left = clamp(g.left - s)
 		g.right = clamp(g.right - s)
@@ -74,7 +80,7 @@ hl.define_submap("gaps-resize", function()
 	end)
 
 	hl.bind("k", function()
-		local s = step_for("height")
+		local s = step_out("height")
 		local g = norm(hl.get_config("general.gaps_out"))
 		g.top = clamp(g.top + s)
 		g.bottom = clamp(g.bottom + s)
@@ -82,41 +88,49 @@ hl.define_submap("gaps-resize", function()
 	end)
 
 	hl.bind("j", function()
-		local s = step_for("height")
+		local s = step_out("height")
 		local g = norm(hl.get_config("general.gaps_out"))
 		g.top = clamp(g.top - s)
 		g.bottom = clamp(g.bottom - s)
 		hl.config({ general = { gaps_out = pack(g) } })
 	end)
 
-	-- Arrow keys → gaps_in (same axis pattern, same step)
+	-- Arrow keys → uniform gaps_in (all sides equally, 0.4% step)
 	hl.bind("Right", function()
-		local s = step_for("width")
+		local s = step_in()
 		local g = norm(hl.get_config("general.gaps_in"))
 		g.left = clamp(g.left + s)
 		g.right = clamp(g.right + s)
-		hl.config({ general = { gaps_in = pack(g) } })
-	end)
-
-	hl.bind("Left", function()
-		local s = step_for("width")
-		local g = norm(hl.get_config("general.gaps_in"))
-		g.left = clamp(g.left - s)
-		g.right = clamp(g.right - s)
-		hl.config({ general = { gaps_in = pack(g) } })
-	end)
-
-	hl.bind("Up", function()
-		local s = step_for("height")
-		local g = norm(hl.get_config("general.gaps_in"))
 		g.top = clamp(g.top + s)
 		g.bottom = clamp(g.bottom + s)
 		hl.config({ general = { gaps_in = pack(g) } })
 	end)
 
-	hl.bind("Down", function()
-		local s = step_for("height")
+	hl.bind("Up", function()
+		local s = step_in()
 		local g = norm(hl.get_config("general.gaps_in"))
+		g.left = clamp(g.left + s)
+		g.right = clamp(g.right + s)
+		g.top = clamp(g.top + s)
+		g.bottom = clamp(g.bottom + s)
+		hl.config({ general = { gaps_in = pack(g) } })
+	end)
+
+	hl.bind("Left", function()
+		local s = step_in()
+		local g = norm(hl.get_config("general.gaps_in"))
+		g.left = clamp(g.left - s)
+		g.right = clamp(g.right - s)
+		g.top = clamp(g.top - s)
+		g.bottom = clamp(g.bottom - s)
+		hl.config({ general = { gaps_in = pack(g) } })
+	end)
+
+	hl.bind("Down", function()
+		local s = step_in()
+		local g = norm(hl.get_config("general.gaps_in"))
+		g.left = clamp(g.left - s)
+		g.right = clamp(g.right - s)
 		g.top = clamp(g.top - s)
 		g.bottom = clamp(g.bottom - s)
 		hl.config({ general = { gaps_in = pack(g) } })
