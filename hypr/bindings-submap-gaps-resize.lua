@@ -10,7 +10,7 @@
 -- gaps_in:  0.4% (inner gaps are smaller, uniform)
 -- Uses hl.* API directly to avoid IPC deadlocks.
 local FACTOR_OUT = 0.055
-local FACTOR_IN  = 0.004
+local FACTOR_IN  = 0.001
 
 local function mon_dim(axis)
 	local mon = hl.get_active_monitor() or hl.get_monitor_at_cursor()
