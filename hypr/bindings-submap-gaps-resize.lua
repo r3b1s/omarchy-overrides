@@ -5,22 +5,19 @@
 --   k: increase top+bottom gaps  |  j: decrease top+bottom gaps
 --   Esc: exit submap
 
--- Call hypr/scripts/delta-resize to get screen-percentage-based step values.
-local home = os.getenv("HOME") or ""
-local delta_script = home .. "/.config/hypr/scripts/delta-resize"
+-- Screen-percentage step (same 5.5% factor as hypr/scripts/delta-resize).
+-- Uses hl.* API directly (no subprocess/hyprctl calls) to avoid IPC deadlocks
+-- since this runs inside Hyprland's Lua callback context.
+local FACTOR = 0.055
 
-local function get_step_x()
-	local handle = io.popen(delta_script .. " --print x")
-	local v = tonumber(handle:read("*a")) or 10
-	handle:close()
-	return math.max(1, v)
+local function mon_dim(axis)
+	local mon = hl.get_active_monitor() or hl.get_monitor_at_cursor()
+	local dim = mon and tonumber(mon[axis]) or (axis == "width" and 1920 or 1080)
+	return dim
 end
 
-local function get_step_y()
-	local handle = io.popen(delta_script .. " --print y")
-	local v = tonumber(handle:read("*a")) or 10
-	handle:close()
-	return math.max(1, v)
+local function step_for(axis)
+	return math.max(1, math.floor(mon_dim(axis) * FACTOR))
 end
 
 local submapNotify = 'notify-send "Gaps Resize [ON]" "h/l: sides  |  j/k: top/bottom  |  Esc: exit"'
@@ -61,7 +58,7 @@ end
 
 hl.define_submap("gaps-resize", function()
 	hl.bind("l", function()
-		local s = get_step_x()
+		local s = step_for("width")
 		local g = norm(hl.get_config("general.gaps_out"))
 		g.left = clamp(g.left + s)
 		g.right = clamp(g.right + s)
@@ -69,7 +66,7 @@ hl.define_submap("gaps-resize", function()
 	end)
 
 	hl.bind("h", function()
-		local s = get_step_x()
+		local s = step_for("width")
 		local g = norm(hl.get_config("general.gaps_out"))
 		g.left = clamp(g.left - s)
 		g.right = clamp(g.right - s)
@@ -77,7 +74,7 @@ hl.define_submap("gaps-resize", function()
 	end)
 
 	hl.bind("k", function()
-		local s = get_step_y()
+		local s = step_for("height")
 		local g = norm(hl.get_config("general.gaps_out"))
 		g.top = clamp(g.top + s)
 		g.bottom = clamp(g.bottom + s)
@@ -85,7 +82,7 @@ hl.define_submap("gaps-resize", function()
 	end)
 
 	hl.bind("j", function()
-		local s = get_step_y()
+		local s = step_for("height")
 		local g = norm(hl.get_config("general.gaps_out"))
 		g.top = clamp(g.top - s)
 		g.bottom = clamp(g.bottom - s)
