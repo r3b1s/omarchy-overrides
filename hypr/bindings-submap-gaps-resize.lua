@@ -5,21 +5,22 @@
 --   k: increase top+bottom gaps  |  j: decrease top+bottom gaps
 --   Esc: exit submap
 
--- Dynamic step: same screen-percentage factor (5.5%) as hypr/scripts/delta-resize.
-local FACTOR = 0.055
+-- Call hypr/scripts/delta-resize to get screen-percentage-based step values.
+local home = os.getenv("HOME") or ""
+local delta_script = home .. "/.config/hypr/scripts/delta-resize"
 
 local function get_step_x()
-	local handle = io.popen("hyprctl monitors -j | jq -r '.[] | select(.focused).width'")
-	local w = tonumber(handle:read("*a")) or 1920
+	local handle = io.popen(delta_script .. " --print x")
+	local v = tonumber(handle:read("*a")) or 10
 	handle:close()
-	return math.max(1, math.floor(w * FACTOR))
+	return math.max(1, v)
 end
 
 local function get_step_y()
-	local handle = io.popen("hyprctl monitors -j | jq -r '.[] | select(.focused).height'")
-	local h = tonumber(handle:read("*a")) or 1080
+	local handle = io.popen(delta_script .. " --print y")
+	local v = tonumber(handle:read("*a")) or 10
 	handle:close()
-	return math.max(1, math.floor(h * FACTOR))
+	return math.max(1, v)
 end
 
 local submapNotify = 'notify-send "Gaps Resize [ON]" "h/l: sides  |  j/k: top/bottom  |  Esc: exit"'

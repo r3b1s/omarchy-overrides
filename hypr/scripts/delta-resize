@@ -13,6 +13,12 @@ resize_active() {
 }
 
 case "$1" in
+    --print)
+        case "$2" in
+            x|w) echo "$DELTA_X" ;;
+            y|h) echo "$DELTA_Y" ;;
+        esac
+        ;;
     x) resize_active "$DELTA_X" 0 ;;
     -x) resize_active "-$DELTA_X" 0 ;;
     y) resize_active 0 "$DELTA_Y" ;;
