@@ -36,7 +36,7 @@ map("n", "n", "nzz", { noremap = true })
 map("n", "N", "Nzz", { noremap = true })
 
 -- Tmux Sessionizer
-map("n", "<C-f>", "<cmd>silent !tmux neww ~/.local/bin/tmux-sessionizer<CR>", { desc = "tmux sessionizer" })
+map("n", "<C-t>", "<cmd>silent !tmux neww ~/.local/bin/tmux-sessionizer<CR>", { desc = "tmux sessionizer" })
 
 -- Harpoon: quick file marks and list navigation
 map("n", "<leader>a", function()

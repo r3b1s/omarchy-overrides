@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# sync-configs - delete existing configs/symlinks and re-symlink all intended
+# configuration files from omarchy-overrides into system locations.
+#
+# No backups. For each target: rm -f, mkdir -p dirname, ln -s.
+# All symlinks are individual files (no directory symlinks).
+
+set -euo pipefail
+
+USER_HOME=$(eval echo "~${SUDO_USER:-$USER}")
+DOTS="$USER_HOME/.local/share/omarchy-overrides"
+
+# ── helpers ──────────────────────────────────────────────────────────────────
+
+sync_file() {
+  local src="$1"
+  local dest="$2"
+  echo "  $dest"
+  rm -f "$dest"
+  mkdir -p "$(dirname "$dest")"
+  ln -s -v "$src" "$dest" 2>&1 | sed 's/^/    /'
+}
+
+section() {
+  echo ""
+  echo "── $1 ──"
+}
+
+# ── simple single-file configs ───────────────────────────────────────────────
+
+section "ghostty"
+sync_file "$DOTS/ghostty/config" "$USER_HOME/.config/ghostty/config"
+
+section "qutebrowser"
+sync_file "$DOTS/qutebrowser/config.py" "$USER_HOME/.config/qutebrowser/config.py"
+
+section "starship"
+sync_file "$DOTS/starship/starship.toml" "$USER_HOME/.config/starship.toml"
+
+section "tmux"
+sync_file "$DOTS/tmux/tmux.conf" "$USER_HOME/.config/tmux/tmux.conf"
+
+section "voxtype"
+sync_file "$DOTS/voxtype/config.toml" "$USER_HOME/.config/voxtype/config.toml"
+
+section "waybar"
+sync_file "$DOTS/waybar/config.jsonc" "$USER_HOME/.config/waybar/config.jsonc"
+
+# ── syncthing ────────────────────────────────────────────────────────────────
+
+section "syncthing"
+sync_file "$DOTS/syncthing/syncthing.service" "$USER_HOME/.config/systemd/user/syncthing.service"
+echo "  Reloading systemd user daemon..."
+systemctl --user daemon-reload && systemctl --user restart syncthing.service || echo "  Warning: daemon-reload failed (systemd user instance may not be running)"
+
+# ── hypr (Lua configs + scripts) ─────────────────────────────────────────────
+
+section "hypr (Lua configs)"
+for f in "$DOTS/hypr"/*.lua; do
+  name=$(basename "$f")
+  sync_file "$f" "$USER_HOME/.config/hypr/$name"
+done
+
+section "hypr (scripts)"
+for f in "$DOTS/hypr/scripts"/*; do
+  [[ -f "$f" ]] || continue
+  name=$(basename "$f")
+  sync_file "$f" "$USER_HOME/.config/hypr/scripts/$name"
+done
+
+# ── nvim (default profile) ───────────────────────────────────────────────────
+
+section "nvim (config)"
+sync_file "$DOTS/nvim/lua/config/keymaps.lua" "$USER_HOME/.config/nvim/lua/config/keymaps.lua"
+sync_file "$DOTS/nvim/lua/config/options.lua" "$USER_HOME/.config/nvim/lua/config/options.lua"
+
+section "nvim (plugins)"
+for f in "$DOTS/nvim/lua/plugins"/*.lua; do
+  name=$(basename "$f")
+  sync_file "$f" "$USER_HOME/.config/nvim/lua/plugins/$name"
+done
+
+# ── nvim-custom (vim alias) ──────────────────────────────────────────────────
+
+section "nvim-custom (root)"
+sync_file "$DOTS/nvim-custom/init.lua" "$USER_HOME/.config/nvim-custom/init.lua"
+
+section "nvim-custom (config)"
+for f in "$DOTS/nvim-custom/lua/config"/*.lua; do
+  name=$(basename "$f")
+  sync_file "$f" "$USER_HOME/.config/nvim-custom/lua/config/$name"
+done
+
+section "nvim-custom (plugins)"
+for f in "$DOTS/nvim-custom/lua/plugins"/*.lua; do
+  name=$(basename "$f")
+  sync_file "$f" "$USER_HOME/.config/nvim-custom/lua/plugins/$name"
+done
+
+# ── nvim-notes (notes alias) ─────────────────────────────────────────────────
+
+section "nvim-notes (config)"
+for f in "$DOTS/nvim-notes/lua/config"/*.lua; do
+  name=$(basename "$f")
+  sync_file "$f" "$USER_HOME/.config/nvim-notes/lua/config/$name"
+done
+
+section "nvim-notes (plugins)"
+for f in "$DOTS/nvim-notes/lua/plugins"/*.lua; do
+  name=$(basename "$f")
+  sync_file "$f" "$USER_HOME/.config/nvim-notes/lua/plugins/$name"
+done
+
+# ── bin scripts → ~/.local/bin ───────────────────────────────────────────────
+
+section "bin scripts"
+for f in "$DOTS/bin"/*; do
+  [[ -f "$f" ]] || continue
+  name=$(basename "$f")
+  chmod 755 "$f"
+  sync_file "$f" "$USER_HOME/.local/bin/$name"
+done
+
+echo ""
+echo "sync-configs: done."

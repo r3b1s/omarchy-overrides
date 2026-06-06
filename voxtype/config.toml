@@ -177,6 +177,8 @@ filler_words = ["uh", "um", "er", "ah", "eh", "hmm", "hm", "mm", "mhm"]
 "proxomox" = "proxmox"
 "cloud code" = "claude code"
 "Cloud Code" = "claude code"
+"DMUX" = "tmux"
+"dmux" = "tmux"
 
 # Non-standard Punctuation
 # "TAC" = "-"

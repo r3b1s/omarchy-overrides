@@ -776,15 +776,12 @@ scratchpad("SUPER + T", "term1", terminal, {
 	move_description = "Move to term1's dropdown",
 })
 
--- term2.
+-- tmux-sessionizer.
 unbindAll({
 	"SUPER + CTRL + T",
 	"SUPER + CTRL + " .. key.t,
 })
-scratchpad("SUPER + CTRL + T", "term2", terminal, {
-	layout = "master",
-	layout_opts = { orientation = "center" },
-})
+exec("SUPER + CTRL + T", terminal .. " -e tmux-sessionizer", "Open tmux sessionizer")
 
 -- lazydocker.
 unbindAll({

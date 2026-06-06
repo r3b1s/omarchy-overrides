@@ -10,6 +10,9 @@ export USER_BIN="$USER_HOME/.local/bin"
 export DOTS="$USER_HOME/.local/share/omarchy-overrides"
 export DOTS_BIN="$DOTS/bin"
 
+## Preferred Agentic Harness
+export HARNESS="pi"
+
 ## Go
 export GOBIN="$(go env GOPATH)/bin"
 

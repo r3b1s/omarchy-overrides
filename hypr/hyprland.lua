@@ -40,6 +40,7 @@ require("hypr.actions")
 require("hypr.bindings")
 require("hypr.bindings-submap-vm-passthru")
 require("hypr.bindings-submap-voxtype_suppress")
+require("hypr.bindings-submap-gaps-resize")
 require("hypr.layouts")
 
 -- require("default.hypr.toggles")
