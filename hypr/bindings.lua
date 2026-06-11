@@ -792,6 +792,22 @@ scratchpad("SUPER + T", "term1", terminal, {
 	move_description = "Move to term1's dropdown",
 })
 
+-- term2.
+unbindAll({
+	"SUPER + G",
+	"SUPER + " .. key.g,
+})
+unbindAll({
+	"SUPER + SHIFT + CTRL + G",
+	"SUPER + SHIFT + CTRL + " .. key.g,
+})
+scratchpad("SUPER + G", "term2", terminal, {
+	layout = "master",
+	layout_opts = { orientation = "center" },
+	move_keys = "SUPER + SHIFT + CTRL + G",
+	move_description = "Move to term2's dropdown",
+})
+
 -- tmux-sessionizer.
 unbindAll({
 	"SUPER + CTRL + T",
@@ -1035,22 +1051,6 @@ unbindAll({
 	"SUPER + " .. key.i,
 })
 scratchpad("SUPER + I", "Dictionary", launchWebapp .. ' "https://www.onelook.com/thesaurus"')
-
--- term2.
-unbindAll({
-	"SUPER + G",
-	"SUPER + " .. key.g,
-})
-unbindAll({
-	"SUPER + SHIFT + CTRL + G",
-	"SUPER + SHIFT + CTRL + " .. key.g,
-})
-scratchpad("SUPER + G", "term2", terminal, {
-	layout = "master",
-	layout_opts = { orientation = "center" },
-	move_keys = "SUPER + SHIFT + CTRL + G",
-	move_description = "Move to term2's dropdown",
-})
 
 -- Code forge 2: GitLab.
 unbindAll({
