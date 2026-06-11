@@ -1,3 +1,4 @@
 openspec
 .pi
 neowall/shaders/*
+hypr/soundboard.lua

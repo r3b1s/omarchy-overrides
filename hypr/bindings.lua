@@ -554,17 +554,24 @@ exec("SUPER + CTRL + R", bin .. "/gifrecord", "Screen Record GIF")
 -- ##### Voice Capture ######
 -- ###                    ###
 
-local mic_mute_toggle = "pactl set-source-mute @DEFAULT_SOURCE@ toggle; notify-send 'Toggling Mic'"
-local mic_mute_toggle_discord = ""
+-- Override Omarchy's default mic-mute key so it targets the virtual mic sources
+-- used by EasyEffects / the Discord mixed mic setup while preserving the stock OSD.
+unbind("XF86AudioMicMute")
+exec(
+	"XF86AudioMicMute",
+	bin .. "/omarchy-audio-input-mute-smart",
+	"Mute microphone",
+	{ locked = true, repeating = true }
+)
 
--- Mic Mute Toggle
+-- Mic Mute Toggle (replaced by omarchy-imback-sound: un-mute mic, toggle Discord mute, play sound)
 unbindAll({
 	"SUPER + ALT + apostrophe",
 	"SUPER + ALT + Apostrophe",
 	"SUPER + ALT + APOSTROPHE",
 	"SUPER + ALT + " .. key.apostrophe,
 })
-exec("SUPER + ALT + Apostrophe", mic_mute_toggle, "Mic Mute Toggle")
+exec("SUPER + ALT + Apostrophe", bin .. "/omarchy-imback-sound", "I'm Back Soundboard", { locked = true, repeating = true })
 
 -- Mic Mute Discord
 -- unbindAll({
@@ -590,6 +597,15 @@ hl.bind(
 -- Pass keycombo for discord mute toggle
 -- - (alternate way VS sending shortcut as above)
 -- hl.bind("SHIFT + CTRL + M", hl.dsp.pass({ window = "class:^(vesktop)$" }))
+
+-- BRB soundboard: un-mute mic, play BRB sound, then mute Discord.
+unbindAll({
+	"SUPER + SHIFT + apostrophe",
+	"SUPER + SHIFT + Apostrophe",
+	"SUPER + SHIFT + APOSTROPHE",
+	"SUPER + SHIFT + " .. key.apostrophe,
+})
+exec("SUPER + SHIFT + Apostrophe", bin .. "/omarchy-brb-sound", "BRB Soundboard", { locked = true, repeating = true })
 
 -- Voxtype speech-to-text binds.
 unbindAll({

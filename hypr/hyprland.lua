@@ -5,10 +5,10 @@
 local home = os.getenv("HOME") or ""
 
 package.path = home
-    .. "/.config/?.lua;"
-    .. (os.getenv("OMARCHY_PATH") or (home .. "/.local/share/omarchy"))
-    .. "/?.lua;"
-    .. package.path
+	.. "/.config/?.lua;"
+	.. (os.getenv("OMARCHY_PATH") or (home .. "/.local/share/omarchy"))
+	.. "/?.lua;"
+	.. package.path
 
 local paths = require("default.hypr.paths")
 
@@ -24,11 +24,11 @@ require("default.hypr.input")
 require("default.hypr.windows")
 
 do
-  local theme = io.open(paths.config_home .. "/omarchy/current/theme/hyprland.lua", "r")
-  if theme then
-    theme:close()
-    require("omarchy.current.theme.hyprland")
-  end
+	local theme = io.open(paths.config_home .. "/omarchy/current/theme/hyprland.lua", "r")
+	if theme then
+		theme:close()
+		require("omarchy.current.theme.hyprland")
+	end
 end
 
 require("hypr.autostart")
@@ -41,6 +41,7 @@ require("hypr.bindings")
 require("hypr.bindings-submap-vm-passthru")
 require("hypr.bindings-submap-voxtype_suppress")
 require("hypr.bindings-submap-gaps-resize")
+require("hypr.soundboard")
 require("hypr.layouts")
 
 -- require("default.hypr.toggles")
