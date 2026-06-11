@@ -571,7 +571,12 @@ unbindAll({
 	"SUPER + ALT + APOSTROPHE",
 	"SUPER + ALT + " .. key.apostrophe,
 })
-exec("SUPER + ALT + Apostrophe", bin .. "/omarchy-imback-sound", "I'm Back Soundboard", { locked = true, repeating = true })
+exec(
+	"SUPER + ALT + Apostrophe",
+	bin .. "/omarchy-imback-sound",
+	"I'm Back Soundboard",
+	{ locked = true, repeating = true }
+)
 
 -- Mic Mute Discord
 -- unbindAll({
