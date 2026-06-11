@@ -9,6 +9,9 @@ alias vim='NVIM_APPNAME=nvim-custom nvim'
 # Conventional Commits w/ koji, sign-off included
 alias ko="koji -c ~/.config/koji/config.toml && git commit --amend --no-edit -s"
 
+# tmux-sessionizer
+alias ts="tmux-sessionizer"
+
 ################
 ### AI Tools ###
 
@@ -18,4 +21,4 @@ alias kc="kilo --continue"
 # opencode
 alias oc="opencode --continue"
 
-alias pc="pi --resume"
+
