@@ -69,7 +69,7 @@ gpu_isolation = true
 context_window_optimization = true
 
 # Provides context to Whisper to improve transcription accuracy for domain-specific vocabulary. The prompt hints at terminology, proper nouns, or formatting conventions that Whisper should expect in the audio.
-initial_prompt = "Voxtype, Hyprland, Omarchy, Arch Linux, Waybar, Tiling Window Managers, programming languages, golang, systemd, linux, proxmox, ludus, VMs, journalctl, systemctl, kubectl, CLIs, command line, terminal, cloud-init, shell, and other IT & computer science related concepts."
+initial_prompt = "Lots of software engineering tools, concepts, & disciplines. Networking too. Voxtype, Hyprland, Omarchy, Arch Linux, Waybar, tiling window managers, programming languages, golang, security, systemd, Linux, Proxmox, Ludus, VM, virtual machines, VMs (plural), journalctl, systemctl, kubectl, CLIs, command line, terminal, cloud-init, shell environments, cybersecurity, machine learning, artificial intelligence, AI, terminal multiplexers, tmux, VPN, VPNs (plural), VPC, VPCs (plural), VPS, VPSs (plural). Other IT & computer science related concepts."
 
 [output]
 # Primary output mode: "type" or "clipboard"
@@ -179,6 +179,7 @@ filler_words = ["uh", "um", "er", "ah", "eh", "hmm", "hm", "mm", "mhm"]
 "Cloud Code" = "claude code"
 "DMUX" = "tmux"
 "dmux" = "tmux"
+"T-Mucks" = "tmux"
 
 # Non-standard Punctuation
 # "TAC" = "-"
