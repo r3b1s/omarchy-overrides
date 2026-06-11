@@ -1036,12 +1036,21 @@ unbindAll({
 })
 scratchpad("SUPER + I", "Dictionary", launchWebapp .. ' "https://www.onelook.com/thesaurus"')
 
--- Code forge 1: GitHub.
+-- term2.
 unbindAll({
 	"SUPER + G",
 	"SUPER + " .. key.g,
 })
-scratchpad("SUPER + G", "GitHub", launchWebapp .. ' "https://github.com"')
+unbindAll({
+	"SUPER + SHIFT + CTRL + G",
+	"SUPER + SHIFT + CTRL + " .. key.g,
+})
+scratchpad("SUPER + G", "term2", terminal, {
+	layout = "master",
+	layout_opts = { orientation = "center" },
+	move_keys = "SUPER + SHIFT + CTRL + G",
+	move_description = "Move to term2's dropdown",
+})
 
 -- Code forge 2: GitLab.
 unbindAll({
