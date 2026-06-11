@@ -48,6 +48,9 @@ sync_file "$DOTS/starship/starship.toml" "$USER_HOME/.config/starship.toml"
 section "tmux"
 sync_file "$DOTS/tmux/tmux.conf" "$USER_HOME/.config/tmux/tmux.conf"
 
+section "yazi"
+sync_file "$DOTS/yazi/yazi.toml" "$USER_HOME/.config/yazi/yazi.toml"
+
 section "voxtype"
 sync_file "$DOTS/voxtype/config.toml" "$USER_HOME/.config/voxtype/config.toml"
 
