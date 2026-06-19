@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+STATE_FILE="/run/user/$(id -u)/voxtype/state"
+PREV_STATE=$(cat "$STATE_FILE" 2>/dev/null || echo "idle")
+
+voxtype record toggle
+
+if [ "$PREV_STATE" = "idle" ]; then
+  omarchy-swayosd-client \
+    --custom-message 'Dictation: KB will be suppressed' \
+    --custom-icon 'input-keyboard-symbolic'
+else
+  omarchy-swayosd-client --custom-message '' --custom-icon ''
+fi

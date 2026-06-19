@@ -617,7 +617,7 @@ unbindAll({
 	"SUPER + D",
 	"SUPER + " .. key.d,
 })
-exec("SUPER + D", "voxtype record toggle", "Toggle dictation")
+exec("SUPER + D", "$HOME/.config/hypr/scripts/voxtype-record-toggle", "Toggle dictation")
 
 -- ###                    ###
 -- ##### Voice Capture ######

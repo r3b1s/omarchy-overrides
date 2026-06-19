@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-notify-send "Disabled Submap: voxtype_suppress"
+omarchy-swayosd-client --custom-message 'Dictation: KB re-enabled' --custom-icon 'input-keyboard-symbolic'
 hyprctl dispatch 'hl.dsp.submap("reset")'
