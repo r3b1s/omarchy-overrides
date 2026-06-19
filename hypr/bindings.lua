@@ -1156,3 +1156,5 @@ exec("SUPER + ALT + A", launchWebapp .. ' "https://chatgpt.com"', "ChatGPT Web")
 -- ###                    ###
 -- ####### Other Apps #######
 -- ##########################
+
+require("hypr.bindings-submap-browser-profiles")
