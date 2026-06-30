@@ -2,3 +2,6 @@ openspec
 .pi
 neowall/shaders/*
 hypr/bindings-submap-soundboard.lua
+bin/omarchy-brb-sound
+bin/omarchy-imback-sound
+misc/assets/

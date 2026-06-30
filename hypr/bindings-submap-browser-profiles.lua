@@ -8,8 +8,8 @@
 
 -- Browser CLI entry point and flags template.
 -- %s is replaced with the profile name (e.g. "Profile 4") at call time.
-local browserCli       = "brave-origin-beta"
-local browserFlags     = '--profile-directory="%s"'
+local browserCli = "brave-origin-beta"
+local browserFlags = '--profile-directory="%s"'
 local browserIncognito = "--incognito"
 
 local submapNotify = 'notify-send "Browser Profiles [ON]" "0-9: Launch profile  |  Esc: exit"'
@@ -37,24 +37,38 @@ hl.define_submap("browser-profiles", function()
 
 	-- Bind SHIFT+0-9 to launch the corresponding profile in incognito mode.
 	for i = 0, 9 do
-		local keyLabel    = tostring(i)
+		local keyLabel = tostring(i)
 		local profileName = "Profile " .. tostring(i)
 
 		hl.bind("SHIFT + " .. keyLabel, function()
-			hl.dispatch(hl.dsp.exec_cmd(browserCli .. " " .. string.format(browserFlags, profileName) .. " " .. browserIncognito))
+			hl.dispatch(
+				hl.dsp.exec_cmd(
+					browserCli .. " " .. string.format(browserFlags, profileName) .. " " .. browserIncognito
+				)
+			)
 			hl.dispatch(hl.dsp.submap("reset"), { description = "Exit browser profiles", submap = "browser-profiles" })
 		end)
 	end
 
 	-- Bind SHIFT+D to launch the "Default" profile in incognito mode.
 	hl.bind("SHIFT + d", function()
-		hl.dispatch(hl.dsp.exec_cmd(browserCli .. " " .. string.format(browserFlags, "Default") .. " " .. browserIncognito))
+		hl.dispatch(
+			hl.dsp.exec_cmd(browserCli .. " " .. string.format(browserFlags, "Default") .. " " .. browserIncognito)
+		)
 		hl.dispatch(hl.dsp.submap("reset"), { description = "Exit browser profiles", submap = "browser-profiles" })
 	end)
 
 	-- Bind P to launch in incognito mode with a fresh temp profile.
 	hl.bind("p", function()
-		hl.dispatch(hl.dsp.exec_cmd(browserCli .. " --profile-directory=\"/run/user/$UID/" .. browserCli .. "/private-tmp\" " .. browserIncognito))
+		hl.dispatch(
+			hl.dsp.exec_cmd(
+				browserCli
+					.. ' --profile-directory="/run/user/$UID/'
+					.. browserCli
+					.. '/private-tmp" '
+					.. browserIncognito
+			)
+		)
 		hl.dispatch(hl.dsp.submap("reset"), { description = "Exit browser profiles", submap = "browser-profiles" })
 	end)
 
@@ -76,6 +90,6 @@ hl.unbind("SUPER + SHIFT + CTRL + ALT + B")
 hl.unbind("SUPER + SHIFT + CTRL + ALT + " .. "code:56") -- b keycode
 --
 hl.bind("SUPER + SHIFT + CTRL + ALT + B", function()
-	hl.dispatch(hl.dsp.submap("browser-profiles"), { description = "Launch browser with selected profile" })
+	hl.dispatch(hl.dsp.submap("browser-profiles"), { description = "Submap: Browser Profiles" })
 	hl.dispatch(hl.dsp.exec_cmd(submapNotify))
 end)

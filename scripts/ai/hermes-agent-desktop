@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# --- config ---
+ICON="$HOME/.local/share/omarchy-overrides/misc/assets/hermes-agent.svg"
+ICON_DEST="$HOME/.local/share/icons/hicolor/scalable/apps/hermes-agent.svg"
+
+WRAPPER="$HOME/.local/share/omarchy-overrides/bin/hermes-desktop"
+DESKTOP_FILE="$HOME/.local/share/applications/hermes-agent.desktop"
+SUDOERS_FILE="/etc/sudoers.d/hermes-desktop-wrapper"
+
+# --- helpers ---
+die() { echo "error: $*" >&2; exit 1; }
+info() { echo "==> $*"; }
+warn() { echo "warning: $*" >&2; }
+
+# --- checks ---
+check_prereqs() {
+  [[ -f "$ICON" ]] || die "Icon not found at ${ICON}"
+  command -v hermes &>/dev/null || die "hermes not found in PATH — is it installed?"
+  command -v update-desktop-database &>/dev/null || warn "update-desktop-database not found (may need desktop-file-utils)"
+}
+
+# --- install wrapper ---
+install_wrapper() {
+  mkdir -p "$(dirname "$WRAPPER")"
+
+  cat > "$WRAPPER" << 'WRAPPER'
+#!/usr/bin/env bash
+set -euo pipefail
+hermes desktop "$@" &
+disown
+WRAPPER
+
+  chmod +x "$WRAPPER"
+  info "Wrapper created -> ${WRAPPER}"
+}
+
+# --- install icon ---
+install_icon() {
+  mkdir -p "$(dirname "$ICON_DEST")"
+  cp "$ICON" "$ICON_DEST"
+  info "Icon installed -> ${ICON_DEST}"
+}
+
+# --- install .desktop file ---
+install_desktop() {
+  mkdir -p "$(dirname "$DESKTOP_FILE")"
+
+  cat > "$DESKTOP_FILE" << EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hermes Agent
+Comment=AI assistant with tool-calling capabilities
+Exec=${WRAPPER}
+Icon=${ICON_DEST}
+Terminal=false
+Categories=AI;Utility;Development;
+StartupNotify=true
+EOF
+
+  info "Desktop file created -> ${DESKTOP_FILE}"
+}
+
+# --- install sudoers rule ---
+install_sudoers() {
+  local hermes_path target_user
+  hermes_path="$(command -v hermes)"
+  target_user="${SUDO_USER:-${USER}}"
+  local rule="${target_user} ALL=(ALL) NOPASSWD: ${hermes_path} desktop"
+
+  # write via temp file to avoid partial writes
+  local tmp
+  tmp="$(mktemp)"
+  printf '%s\n' "${rule}" > "$tmp"
+  chmod 440 "$tmp"
+  sudo cp "$tmp" "$SUDOERS_FILE"
+  rm -f "$tmp"
+
+  info "Sudoers rule installed -> ${SUDOERS_FILE}"
+  info "  ${rule}"
+}
+
+# --- register in desktop database ---
+register() {
+  if command -v update-desktop-database &>/dev/null; then
+    update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+    info "Desktop database updated"
+  fi
+  info "Done — launch Hermes Agent from your app launcher"
+}
+
+# --- uninstall ---
+cmd_uninstall() {
+  rm -f "$ICON_DEST" "$DESKTOP_FILE" "$WRAPPER"
+
+  if [[ -f "$SUDOERS_FILE" ]]; then
+    sudo rm -f "$SUDOERS_FILE"
+    info "Removed ${SUDOERS_FILE}"
+  fi
+
+  info "All files removed"
+  register
+}
+
+# --- usage ---
+usage() {
+  cat << EOF
+Usage: $(basename "$0") [command]
+
+Commands:
+  install     Create wrapper, .desktop entry, icon, and sudoers rule (default)
+  uninstall   Remove everything
+
+What it does:
+  • Writes a wrapper script at ${WRAPPER}
+    that calls 'sudo hermes desktop'
+  • Installs a sudoers NOPASSWD rule scoped to
+    'hermes desktop' only
+  • Copies the icon to ${ICON_DEST}
+  • Creates a .desktop file at ${DESKTOP_FILE}
+    with Exec pointing at the wrapper
+EOF
+}
+
+# --- entrypoint ---
+case "${1:-install}" in
+  install|--install)
+    check_prereqs
+    install_wrapper
+    install_icon
+    install_desktop
+    install_sudoers   # will prompt for sudo password once
+    register
+    ;;
+  uninstall|--uninstall)
+    cmd_uninstall
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac

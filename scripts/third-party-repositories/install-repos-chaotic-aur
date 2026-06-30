@@ -1,0 +1,46 @@
+#!/bin/bash
+# Setup the Chaotic AUR repository for Arch Linux
+# https://aur.chaotic.cx/docs
+
+set -euo pipefail
+
+REPO_SECTION="[chaotic-aur]"
+MIRROR_LIST="/etc/pacman.d/chaotic-mirrorlist"
+PACMAN_CONF="/etc/pacman.conf"
+KEY="3056513887B78AEB"
+
+msg()  { echo "$(tput bold; tput setaf 2)[+] $(tput sgr0)$*"; }
+warn() { echo "$(tput bold; tput setaf 1)[!] WARNING: $(tput sgr0)$*" >&2; }
+err()  { echo "$(tput bold; tput setaf 1)[-] ERROR: $(tput sgr0)$*" >&2; exit 1; }
+
+# Must be root
+[ "$(id -u)" -eq 0 ] || err "must be run as root"
+
+# Check if repo is already configured
+if grep -q "$REPO_SECTION" "$PACMAN_CONF"; then
+    msg "Chaotic AUR already configured in $PACMAN_CONF"
+    msg "Run 'pacman -Syu' to refresh if needed"
+    exit 0
+fi
+
+msg "Importing Chaotic AUR signing key..."
+pacman-key --recv-key "$KEY" --keyserver keyserver.ubuntu.com
+pacman-key --lsign-key "$KEY"
+
+msg "Installing chaotic-keyring..."
+pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+
+msg "Installing chaotic-mirrorlist..."
+pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+
+msg "Adding [chaotic-aur] to $PACMAN_CONF..."
+cat >> "$PACMAN_CONF" << EOF
+
+[chaotic-aur]
+Include = $MIRROR_LIST
+EOF
+
+msg "Syncing package databases..."
+pacman -Syu
+
+msg "Chaotic AUR is ready!"

@@ -708,6 +708,17 @@ unbindAll({
 })
 scratchpad("SUPER + ALT + B", "Default-Browser 2", "exec " .. omarchyLaunchBrowser)
 
+-- Move window to Default-Browser 1 scratchpad workspace.
+unbindAll({
+	"SUPER + SHIFT + CTRL + U",
+	"SUPER + SHIFT + CTRL + " .. key.u,
+})
+bind(
+	"SUPER + SHIFT + CTRL + U",
+	hl.dsp.window.move({ workspace = "special:Default-Browser 1" }),
+	"Move window to Default-Browser 1"
+)
+
 -- ###                    ###
 -- ###### System Apps #######
 -- ##########################

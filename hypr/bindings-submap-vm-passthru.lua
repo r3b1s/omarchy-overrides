@@ -17,6 +17,6 @@ hl.unbind("SUPER + DELETE")
 hl.unbind("SUPER + " .. delete)
 --
 hl.bind("SUPER + Delete", function()
-	hl.dispatch(hl.dsp.submap("passthru"), { description = "Suppress user input during voxtype:type input" })
+	hl.dispatch(hl.dsp.submap("passthru"), { description = "Submap: Modkey VM Passthru" })
 	hl.dispatch(hl.dsp.exec_cmd(submapNotifyPassthru))
 end)

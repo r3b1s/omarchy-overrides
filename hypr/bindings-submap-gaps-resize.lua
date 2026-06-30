@@ -10,7 +10,7 @@
 -- gaps_in:  0.4% (inner gaps are smaller, uniform)
 -- Uses hl.* API directly to avoid IPC deadlocks.
 local FACTOR_OUT = 0.055
-local FACTOR_IN  = 0.001
+local FACTOR_IN = 0.001
 
 local function mon_dim(axis)
 	local mon = hl.get_active_monitor() or hl.get_monitor_at_cursor()
@@ -147,6 +147,6 @@ hl.unbind("SUPER + CTRL + G")
 hl.unbind("SUPER + CTRL + " .. "code:42") -- g keycode
 --
 hl.bind("SUPER + CTRL + G", function()
-	hl.dispatch(hl.dsp.submap("gaps-resize"), { description = "Adjust gaps_out" })
+	hl.dispatch(hl.dsp.submap("gaps-resize"), { description = "Submap: Desktop Resizing" })
 	hl.dispatch(hl.dsp.exec_cmd(submapNotify))
 end)
