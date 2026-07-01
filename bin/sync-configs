@@ -39,6 +39,9 @@ section() {
 section "ghostty"
 sync_file "$DOTS/ghostty/config" "$USER_HOME/.config/ghostty/config"
 
+section "alacritty"
+sync_file "$DOTS/alacritty/alacritty.toml" "$USER_HOME/.config/alacritty/alacritty.toml"
+
 section "qutebrowser"
 sync_file "$DOTS/qutebrowser/config.py" "$USER_HOME/.config/qutebrowser/config.py"
 
