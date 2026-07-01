@@ -7,3 +7,10 @@
 # if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
 #   exec tmux
 # fi
+
+
+# AppImage CLI integrations
+
+obsidian() {
+  ~/Applications/Obsidian-1.12.7.AppImage "$@"
+}
